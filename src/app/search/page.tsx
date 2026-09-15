@@ -1,0 +1,348 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, Search, Sparkles, X } from "lucide-react";
+import { ProductCard } from "@/components/ui/ProductCard";
+import {
+  getBestsellers,
+  getNewArrivals,
+  searchProducts,
+  type Product,
+} from "@/data/products";
+import { useMoney } from "@/lib/use-money";
+import { cn } from "@/lib/cn";
+
+const quickChips = [
+  "parrot",
+  "tiger",
+  "men",
+  "women",
+  "co-ord",
+  "full sleeve",
+  "new",
+];
+
+function SuggestionRow({
+  product,
+  active,
+  onSelect,
+  formatPriceRange,
+}: {
+  product: Product;
+  active: boolean;
+  onSelect: () => void;
+  formatPriceRange: (min: number, max: number) => string;
+}) {
+  return (
+    <Link
+      href={`/product/${product.slug}`}
+      onClick={onSelect}
+      className={cn(
+        "flex items-center gap-3 rounded-xl px-2.5 py-2 transition",
+        active ? "bg-forest text-white" : "hover:bg-soft"
+      )}
+    >
+      <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-[#efece7]">
+        <Image
+          src={product.image}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="56px"
+        />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span
+          className={cn(
+            "block truncate text-sm font-semibold",
+            active ? "text-white" : "text-ink"
+          )}
+        >
+          {product.name}
+        </span>
+        <span
+          className={cn(
+            "mt-0.5 block text-xs",
+            active ? "text-white/75" : "text-muted"
+          )}
+        >
+          {formatPriceRange(product.priceMin, product.priceMax)}
+          {product.badge ? ` · ${product.badge}` : ""}
+        </span>
+      </span>
+      <ArrowRight
+        className={cn("size-4 shrink-0", active ? "text-white" : "text-muted")}
+        strokeWidth={2}
+      />
+    </Link>
+  );
+}
+
+function SearchContent() {
+  const params = useSearchParams();
+  const router = useRouter();
+  const initial = params.get("q") ?? "";
+  const [value, setValue] = useState(initial);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
+  const { formatPriceRange } = useMoney();
+
+  const liveQuery = value.trim();
+  const suggestions = useMemo(
+    () => (liveQuery ? searchProducts(liveQuery).slice(0, 6) : []),
+    [liveQuery]
+  );
+  const gridResults = useMemo(
+    () => (liveQuery ? searchProducts(liveQuery) : []),
+    [liveQuery]
+  );
+  const trending = useMemo(
+    () => [...getBestsellers().slice(0, 2), ...getNewArrivals().slice(0, 2)],
+    []
+  );
+
+  useEffect(() => {
+    setValue(initial);
+  }, [initial]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [liveQuery]);
+
+  useEffect(() => {
+    const onPointer = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointer);
+    return () => document.removeEventListener("mousedown", onPointer);
+  }, []);
+
+  const commitSearch = (q: string) => {
+    const next = q.trim();
+    setOpen(false);
+    router.push(next ? `/search?q=${encodeURIComponent(next)}` : "/search");
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      setOpen(true);
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) =>
+        suggestions.length ? (i + 1) % suggestions.length : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) =>
+        suggestions.length
+          ? (i - 1 + suggestions.length) % suggestions.length
+          : 0
+      );
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const pick = suggestions[activeIndex];
+      if (open && pick) {
+        router.push(`/product/${pick.slug}`);
+        setOpen(false);
+      } else {
+        commitSearch(value);
+      }
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  };
+
+  const showPanel = open && (liveQuery.length > 0 || true);
+
+  return (
+    <div className="bg-[#f7f5f2]">
+      <div className="border-b border-line bg-white">
+        <div className="container-site py-8 md:py-12">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.28em] text-orange">
+            Smart search
+          </p>
+          <h1 className="font-display text-5xl tracking-wide text-forest md:text-6xl">
+            FIND YOUR{" "}
+            <span className="text-wild text-[clamp(2.5rem,7vw,3.75rem)]">
+              LOOK
+            </span>
+          </h1>
+
+          <div ref={rootRef} className="relative mt-6 max-w-2xl">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                commitSearch(value);
+              }}
+              className="flex items-center gap-2 rounded-full border border-line bg-white px-4 py-3 shadow-[0_10px_30px_rgba(6,35,26,0.06)] focus-within:border-forest/30 focus-within:ring-2 focus-within:ring-orange/25"
+            >
+              <Search className="size-5 shrink-0 text-muted" strokeWidth={1.75} />
+              <input
+                ref={inputRef}
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setOpen(true);
+                }}
+                onFocus={() => setOpen(true)}
+                onKeyDown={onKeyDown}
+                placeholder="Try parrot, tiger, co-ord, women…"
+                className="w-full bg-transparent text-[15px] outline-none placeholder:text-muted/70"
+                aria-autocomplete="list"
+                aria-controls={listId}
+                aria-expanded={open}
+                role="combobox"
+                autoComplete="off"
+              />
+              {value && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  className="flex size-8 items-center justify-center rounded-full text-muted transition hover:bg-soft hover:text-ink"
+                  onClick={() => {
+                    setValue("");
+                    setOpen(true);
+                    inputRef.current?.focus();
+                    router.push("/search");
+                  }}
+                >
+                  <X className="size-4" />
+                </button>
+              )}
+            </form>
+
+            {showPanel && (
+              <div
+                id={listId}
+                role="listbox"
+                className="absolute left-0 right-0 top-[calc(100%+8px)] z-30 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_20px_50px_rgba(6,35,26,0.14)]"
+              >
+                {liveQuery ? (
+                  <div className="p-2">
+                    <p className="px-2.5 pb-2 pt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
+                      {suggestions.length
+                        ? `Matches for “${liveQuery}”`
+                        : `No matches for “${liveQuery}”`}
+                    </p>
+                    {suggestions.map((product, i) => (
+                      <SuggestionRow
+                        key={product.id}
+                        product={product}
+                        active={i === activeIndex}
+                        formatPriceRange={formatPriceRange}
+                        onSelect={() => setOpen(false)}
+                      />
+                    ))}
+                    {suggestions.length > 0 && (
+                      <button
+                        type="button"
+                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-soft px-3 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] text-forest transition hover:bg-forest hover:text-white"
+                        onClick={() => commitSearch(value)}
+                      >
+                        See all {gridResults.length} results
+                        <ArrowRight className="size-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-3">
+                    <p className="mb-2 flex items-center gap-1.5 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
+                      <Sparkles className="size-3 text-orange" />
+                      Trending looks
+                    </p>
+                    <div className="space-y-1">
+                      {trending.map((product, i) => (
+                        <SuggestionRow
+                          key={product.id}
+                          product={product}
+                          active={i === activeIndex}
+                          formatPriceRange={formatPriceRange}
+                          onSelect={() => setOpen(false)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {quickChips.map((chip) => (
+              <button
+                key={chip}
+                type="button"
+                onClick={() => {
+                  setValue(chip);
+                  setOpen(true);
+                  commitSearch(chip);
+                }}
+                className="rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition hover:border-orange hover:text-orange"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="container-site py-8 md:py-12">
+        {liveQuery ? (
+          <>
+            <p className="mb-6 text-sm text-muted">
+              <span className="font-semibold text-ink">{gridResults.length}</span>{" "}
+              {gridResults.length === 1 ? "look" : "looks"} for “{liveQuery}”
+            </p>
+            {gridResults.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-line bg-white px-6 py-14 text-center">
+                <p className="font-display text-3xl text-forest">No matches</p>
+                <p className="mt-2 text-sm text-muted">
+                  Try a print name, category, or one of the chips above.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+                {gridResults.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.22em] text-muted">
+              Browse with images
+            </p>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+              {trending.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container-site py-20 text-center text-muted">
+          Loading…
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
+  );
+}
