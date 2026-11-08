@@ -56,7 +56,6 @@ export const categories: {
 }[] = [
   { slug: "men", label: "Men", image: "/images/products/parrot.jpg" },
   { slug: "women", label: "Women", image: "/images/categories/women.png" },
-  { slug: "kids", label: "Kids", image: "/images/products/sheep.png" },
   {
     slug: "co-ord-sets",
     label: "Co-ord Sets",

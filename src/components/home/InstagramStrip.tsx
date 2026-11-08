@@ -47,7 +47,7 @@ export function InstagramStrip() {
     <section className="overflow-hidden bg-soft py-12 md:py-16">
       <div className="container-site mb-8 flex flex-col items-center text-center md:mb-10">
         <h2 className="flex flex-wrap items-center justify-center gap-3 font-display text-3xl tracking-wide text-ink md:text-4xl">
-          <span className="flex size-9 items-center justify-center rounded-full bg-forest text-white">
+          <span className="flex size-9 items-center justify-center rounded-full bg-ink text-orange">
             <SocialIg className="size-4" />
           </span>
           <span>
@@ -69,14 +69,14 @@ export function InstagramStrip() {
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-8 top-6 -z-0 aspect-[16/10] rounded-2xl bg-[#d9d2c8] shadow-md transition-transform duration-700 md:inset-x-16",
+            "pointer-events-none absolute inset-x-8 top-6 -z-0 aspect-[16/10] rounded-2xl bg-line shadow-md transition-transform duration-700 md:inset-x-16",
             flipped ? "translate-y-3 rotate-[-2deg]" : "translate-y-4 rotate-[2.5deg]"
           )}
         />
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-5 top-3 -z-0 aspect-[16/10] rounded-2xl bg-[#cfc7bb] shadow-lg transition-transform duration-700 md:inset-x-10",
+            "pointer-events-none absolute inset-x-5 top-3 -z-0 aspect-[16/10] rounded-2xl bg-soft shadow-lg transition-transform duration-700 md:inset-x-10",
             flipped ? "translate-y-1.5 rotate-[1.5deg]" : "translate-y-2 rotate-[-1.5deg]"
           )}
         />

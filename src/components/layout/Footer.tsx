@@ -48,7 +48,6 @@ const cats = [
   { href: "/contact", label: "Contact" },
   { href: "/shop/men", label: "Men" },
   { href: "/shop/women", label: "Women" },
-  { href: "/shop/kids", label: "Kids" },
 ];
 
 export function Footer() {
@@ -163,7 +162,7 @@ export function Footer() {
             />
             <button
               type="submit"
-              className="flex size-11 items-center justify-center bg-orange text-white"
+              className="flex size-11 items-center justify-center bg-orange text-ink"
               aria-label="Subscribe"
             >
               <ArrowRight className="size-4" />

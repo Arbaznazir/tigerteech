@@ -62,9 +62,9 @@ export function CurrencySwitcher({
         className={cn(
           "inline-flex h-9 items-center gap-0.5 rounded-full px-1.5 text-[12px] font-semibold tabular-nums tracking-wide transition sm:px-2 md:text-[13px]",
           tone === "dark"
-            ? "text-white hover:text-[#f49331]"
-            : "text-[#1a1a1a] hover:text-[#f49331]",
-          open && "text-[#f49331]"
+            ? "text-white hover:text-orange"
+            : "text-ink hover:text-orange",
+          open && "text-orange"
         )}
         aria-label="Select currency"
         aria-haspopup="listbox"
@@ -88,7 +88,7 @@ export function CurrencySwitcher({
           role="listbox"
           aria-label="Currencies"
           className={cn(
-            "absolute top-[calc(100%+6px)] z-[70] min-w-[152px] overflow-hidden rounded-xl border border-white/10 bg-[#121212]/96 py-1.5 text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md",
+            "absolute top-[calc(100%+6px)] z-[70] min-w-[152px] overflow-hidden rounded-xl border border-white/10 bg-forest-deep/96 py-1.5 text-white shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md",
             align === "right" ? "right-0" : "left-0"
           )}
         >
@@ -100,8 +100,8 @@ export function CurrencySwitcher({
                   type="button"
                   className={cn(
                     "mx-1.5 flex w-[calc(100%-12px)] items-center gap-2 rounded-lg px-2 py-2 text-left text-[13px] font-medium tracking-wide transition",
-                    "hover:bg-[#f49331] hover:text-[#0a0a0a]",
-                    selected && "bg-[#06231A]"
+                    "hover:bg-orange hover:text-ink",
+                    selected && "bg-forest"
                   )}
                   onClick={() => select(c.code)}
                 >

@@ -11,7 +11,6 @@ const nav = [
   { href: "/", label: "Home", match: "exact" as const },
   { href: "/shop/men", label: "Men", match: "prefix" as const },
   { href: "/shop/women", label: "Women", match: "prefix" as const },
-  { href: "/shop/kids", label: "Kids", match: "prefix" as const },
   { href: "/shop", label: "Shop All", match: "exact" as const },
   { href: "/about", label: "About", match: "prefix" as const },
   { href: "/contact", label: "Contact", match: "prefix" as const },
@@ -59,7 +58,7 @@ export function MobileNavDrawer({
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 420, damping: 38 }}
-            className="absolute inset-y-0 left-0 flex w-full max-w-[360px] flex-col bg-[#06231A] text-white shadow-[24px_0_60px_rgba(0,0,0,0.45)]"
+            className="absolute inset-y-0 left-0 flex w-full max-w-[360px] flex-col bg-forest text-white shadow-[24px_0_60px_rgba(0,0,0,0.45)]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 pt-[max(1rem,env(safe-area-inset-top))]">
@@ -85,7 +84,7 @@ export function MobileNavDrawer({
                 type="button"
                 onClick={onClose}
                 aria-label="Close menu"
-                className="flex size-10 items-center justify-center rounded-full bg-white text-[#111] transition active:scale-95"
+                className="flex size-10 items-center justify-center rounded-full bg-paper text-ink transition active:scale-95"
               >
                 <X className="size-5" strokeWidth={2} />
               </button>
@@ -116,7 +115,7 @@ export function MobileNavDrawer({
                         <span
                           className={cn(
                             "font-display text-[1.65rem] leading-none tracking-[0.04em]",
-                            active ? "text-[#111]" : "text-white"
+                            active ? "text-ink" : "text-white"
                           )}
                         >
                           {item.label}
@@ -124,7 +123,7 @@ export function MobileNavDrawer({
                         <ArrowRight
                           className={cn(
                             "size-4 shrink-0",
-                            active ? "text-[#111]" : "text-white/40"
+                            active ? "text-ink" : "text-white/40"
                           )}
                           strokeWidth={2.25}
                         />
@@ -175,7 +174,7 @@ export function MobileNavDrawer({
                       {label}
                     </span>
                     {badge > 0 && (
-                      <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-[#111]">
+                      <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-orange text-[10px] font-bold text-ink">
                         {badge > 9 ? "9+" : badge}
                       </span>
                     )}
@@ -189,7 +188,7 @@ export function MobileNavDrawer({
               <Link
                 href="/shop"
                 onClick={onClose}
-                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-orange text-[13px] font-bold uppercase tracking-[0.12em] text-[#111] transition active:scale-[0.98]"
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-orange text-[13px] font-bold uppercase tracking-[0.12em] text-ink transition active:scale-[0.98]"
               >
                 Shop the drop
                 <ArrowRight className="size-4" strokeWidth={2.5} />

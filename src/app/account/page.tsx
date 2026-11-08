@@ -58,7 +58,7 @@ export default function AccountPage() {
       <section>
         <h2 className="font-display mb-4 text-3xl">Order History</h2>
         {myOrders.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-white p-8 text-center">
+          <div className="rounded-2xl border border-line bg-paper p-8 text-center">
             <p className="text-muted">No orders yet.</p>
             <Button href="/shop" className="mt-4">
               Start Shopping
@@ -69,7 +69,7 @@ export default function AccountPage() {
             {myOrders.map((order) => (
               <li
                 key={order.id}
-                className="rounded-2xl border border-line bg-white p-5"
+                className="rounded-2xl border border-line bg-paper p-5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>

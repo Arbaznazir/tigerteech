@@ -27,8 +27,8 @@ export function InfoPageShell({
   className,
 }: Props) {
   return (
-    <div className={cn("bg-[#f7f5f2]", className)}>
-      <div className="border-b border-line bg-white">
+    <div className={cn("bg-paper", className)}>
+      <div className="border-b border-line bg-paper">
         <div className="container-site py-8 md:py-12">
           <Link
             href="/"
@@ -68,7 +68,7 @@ export function InfoPageShell({
           </p>
           <a
             href="mailto:support@tigerteehclothing.com"
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange px-5 py-3 text-[12px] font-bold uppercase tracking-[0.12em] text-[#111] transition hover:bg-[#ff9f4a]"
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange px-5 py-3 text-[12px] font-bold uppercase tracking-[0.12em] text-ink transition hover:bg-orange-hot"
           >
             <Mail className="size-4" strokeWidth={2.25} />
             support@tigerteehclothing.com
@@ -93,7 +93,7 @@ export function InfoCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-line bg-white p-5 shadow-[0_8px_28px_rgba(6,35,26,0.05)] md:p-7",
+        "rounded-2xl border border-line bg-paper p-5 shadow-[0_8px_28px_rgba(22,20,18,0.05)] md:p-7",
         className
       )}
     >

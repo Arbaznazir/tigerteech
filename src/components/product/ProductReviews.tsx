@@ -28,7 +28,7 @@ export function ProductReviews({ product }: { product: Product }) {
   return (
     <section
       id="reviews"
-      className="border-t border-line bg-[#f7f5f2]/70"
+      className="border-t border-line bg-soft/70"
       aria-labelledby="reviews-heading"
     >
       <div className="container-site py-14 md:py-20">
@@ -51,7 +51,7 @@ export function ProductReviews({ product }: { product: Product }) {
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] lg:gap-14">
           {/* Summary */}
-          <aside className="rounded-[1.5rem] border border-line bg-white p-6 shadow-[0_16px_40px_rgba(6,35,26,0.06)] md:p-8">
+          <aside className="rounded-[1.5rem] border border-line bg-paper p-6 shadow-[0_16px_40px_rgba(22,20,18,0.06)] md:p-8">
             <div className="flex items-end gap-3">
               <span className="font-display text-6xl leading-none text-ink">
                 {product.rating.toFixed(1)}
@@ -65,7 +65,7 @@ export function ProductReviews({ product }: { product: Product }) {
                         "size-4",
                         i < Math.round(product.rating)
                           ? "fill-orange text-orange"
-                          : "fill-transparent text-[#d5d0c8]"
+                          : "fill-transparent text-line"
                       )}
                     />
                   ))}
@@ -80,7 +80,7 @@ export function ProductReviews({ product }: { product: Product }) {
               {distribution.map(({ stars, pct }) => (
                 <li key={stars} className="flex items-center gap-3 text-xs font-semibold">
                   <span className="w-6 tabular-nums text-ink">{stars}★</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#ece8e2]">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-soft">
                     <div
                       className="h-full rounded-full bg-orange"
                       style={{ width: `${pct}%` }}
@@ -102,14 +102,14 @@ export function ProductReviews({ product }: { product: Product }) {
             {reviews.map((review) => (
               <article
                 key={review.id}
-                className="rounded-[1.35rem] border border-line bg-white p-5 shadow-[0_10px_28px_rgba(6,35,26,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(6,35,26,0.08)] md:p-6"
+                className="rounded-[1.35rem] border border-line bg-paper p-5 shadow-[0_10px_28px_rgba(22,20,18,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(22,20,18,0.08)] md:p-6"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold text-ink">{review.author}</p>
                       {review.verified && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#eef6f1] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-forest">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-forest">
                           <BadgeCheck className="size-3" strokeWidth={2.5} />
                           Verified
                         </span>
@@ -127,7 +127,7 @@ export function ProductReviews({ product }: { product: Product }) {
                           "size-3.5",
                           i < review.rating
                             ? "fill-orange text-orange"
-                            : "fill-transparent text-[#d5d0c8]"
+                            : "fill-transparent text-line"
                         )}
                       />
                     ))}
@@ -136,7 +136,7 @@ export function ProductReviews({ product }: { product: Product }) {
                 <h3 className="mt-4 font-display text-2xl tracking-[0.04em] text-ink">
                   {review.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#3f3f3f]">
+                <p className="mt-2 text-sm leading-relaxed text-muted">
                   {review.body}
                 </p>
               </article>

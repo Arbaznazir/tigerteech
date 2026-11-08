@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   return (
     <div className="container-site flex justify-center py-14">
-      <div className="w-full max-w-md rounded-2xl border border-line bg-white p-8">
+      <div className="w-full max-w-md rounded-2xl border border-line bg-paper p-8">
         <h1 className="font-display text-4xl">Login</h1>
         <p className="mt-2 text-sm text-muted">
           Demo auth stored in your browser only.

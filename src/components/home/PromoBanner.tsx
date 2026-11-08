@@ -44,10 +44,9 @@ export function PromoBanner() {
             </p>
             <Link
               href="/shop"
-              style={{ color: "#000000", backgroundColor: "#ffffff" }}
-              className="mt-7 inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-bold uppercase tracking-wide transition hover:bg-[#f3f1ed]"
+              className="mt-7 inline-flex h-12 items-center gap-2 rounded-full bg-paper px-7 text-sm font-bold uppercase tracking-wide text-ink transition hover:bg-soft"
             >
-              Explore Collection <ArrowRight className="size-4" color="#000000" />
+              Explore Collection <ArrowRight className="size-4" />
             </Link>
           </motion.div>
         </div>

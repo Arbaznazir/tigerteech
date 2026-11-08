@@ -67,7 +67,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
   ];
 
   return (
-    <div className="bg-[linear-gradient(180deg,#f7f5f2_0%,#ffffff_28%)]">
+    <div className="bg-[linear-gradient(180deg,var(--color-paper)_0%,var(--color-soft)_28%)]">
       <div className="container-site py-8 md:py-12">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-5 md:mb-8 md:flex-row md:items-end md:justify-between">
@@ -95,7 +95,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
               aria-expanded={sortOpen}
               onClick={() => setSortOpen((v) => !v)}
               className={cn(
-                "flex h-11 w-full items-center gap-2.5 rounded-xl border bg-white px-3.5 text-left shadow-[0_6px_20px_rgba(6,35,26,0.05)] transition",
+                "flex h-11 w-full items-center gap-2.5 rounded-xl border bg-paper px-3.5 text-left shadow-[0_6px_20px_rgba(22,20,18,0.05)] transition",
                 sortOpen
                   ? "border-forest ring-2 ring-forest/10"
                   : "border-line hover:border-forest/30"
@@ -121,7 +121,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
             {sortOpen && (
               <ul
                 role="listbox"
-                className="absolute right-0 z-30 mt-2 w-full min-w-[240px] overflow-hidden rounded-2xl border border-line bg-white py-1.5 shadow-[0_18px_40px_rgba(6,35,26,0.14)]"
+                className="absolute right-0 z-30 mt-2 w-full min-w-[240px] overflow-hidden rounded-2xl border border-line bg-paper py-1.5 shadow-[0_18px_40px_rgba(22,20,18,0.14)]"
               >
                 {SORT_OPTIONS.map((opt) => {
                   const active = opt.value === sort;
@@ -135,7 +135,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
                         }}
                         className={cn(
                           "flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition",
-                          active ? "bg-soft" : "hover:bg-[#faf9f7]"
+                          active ? "bg-soft" : "hover:bg-soft/70"
                         )}
                       >
                         <span className="min-w-0 flex-1">
@@ -163,7 +163,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
 
         {/* Category filters */}
         <div className="mb-8 md:mb-10">
-          <div className="rounded-2xl border border-line/80 bg-white/80 p-2 shadow-[0_8px_28px_rgba(6,35,26,0.04)] backdrop-blur-sm md:p-2.5">
+          <div className="rounded-2xl border border-line/80 bg-paper/80 p-2 shadow-[0_8px_28px_rgba(22,20,18,0.04)] backdrop-blur-sm md:p-2.5">
             <div className="scrollbar-hide -mx-0.5 flex gap-1.5 overflow-x-auto px-0.5 pb-0.5 md:flex-wrap md:overflow-visible">
               {filters.map((f) => {
                 const active = category === f.key;
@@ -175,8 +175,8 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
                     className={cn(
                       "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-[11px] font-bold uppercase tracking-[0.12em] transition duration-200",
                       active
-                        ? "bg-forest text-white shadow-[0_8px_18px_rgba(6,38,31,0.28)]"
-                        : "bg-transparent text-ink/75 hover:bg-soft hover:text-forest"
+                        ? "bg-orange text-ink shadow-[0_8px_18px_rgba(243,129,32,0.35)]"
+                        : "bg-transparent text-ink/75 hover:bg-soft hover:text-orange"
                     )}
                   >
                     {f.icon === "grid" && (
@@ -203,7 +203,7 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

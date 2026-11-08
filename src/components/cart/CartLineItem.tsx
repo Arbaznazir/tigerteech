@@ -34,12 +34,12 @@ export function CartLineItem({
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.3) }}
-      className="group relative overflow-hidden rounded-[1.5rem] border border-line/80 bg-white shadow-[0_1px_0_rgba(6,35,26,0.04)] transition duration-500 hover:-translate-y-0.5 hover:border-forest/20 hover:shadow-[0_18px_40px_rgba(6,35,26,0.1)]"
+      className="group relative overflow-hidden rounded-[1.5rem] border border-line/80 bg-paper shadow-[0_1px_0_rgba(22,20,18,0.04)] transition duration-500 hover:-translate-y-0.5 hover:border-forest/20 hover:shadow-[0_18px_40px_rgba(22,20,18,0.1)]"
     >
       <div className="grid gap-0 md:grid-cols-[220px_1fr]">
         <Link
           href={`/product/${item.product.slug}`}
-          className="relative aspect-[4/5] overflow-hidden bg-[#ece8e2] md:aspect-auto md:min-h-[240px]"
+          className="relative aspect-[4/5] overflow-hidden bg-soft md:aspect-auto md:min-h-[240px]"
         >
           <Image
             src={item.product.image}
@@ -48,7 +48,7 @@ export function CartLineItem({
             className="object-cover transition duration-700 group-hover:scale-[1.05]"
             sizes="(max-width: 768px) 100vw, 220px"
           />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(6,35,26,0.28)_100%)] opacity-70" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(22,20,18,0.28)_100%)] opacity-70" />
           {item.product.badge && (
             <span className="absolute left-3 top-3 rounded-md bg-orange px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white shadow-md">
               {item.product.badge}

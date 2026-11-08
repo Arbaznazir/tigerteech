@@ -45,7 +45,7 @@ export default async function ProductPage({ params }: Props) {
             <h2 className="font-display mt-2 mb-8 text-4xl tracking-[0.04em] text-ink md:text-5xl">
               You May Also Like
             </h2>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

@@ -90,7 +90,7 @@ export default function CheckoutPage() {
 
       <form onSubmit={onSubmit} className="grid gap-10 lg:grid-cols-[1fr_340px]">
         <div className="space-y-8">
-          <section className="rounded-2xl border border-line bg-white p-6">
+          <section className="rounded-2xl border border-line bg-paper p-6">
             <h2 className="font-display text-2xl">Shipping</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <label className="block text-sm sm:col-span-2">
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-line bg-white p-6">
+          <section className="rounded-2xl border border-line bg-paper p-6">
             <h2 className="font-display text-2xl">Payment</h2>
             <p className="mt-1 text-xs text-muted">Mock card form for demo only.</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -214,7 +214,7 @@ export default function CheckoutPage() {
           {error && <p className="text-sm text-red-600">{error}</p>}
         </div>
 
-        <aside className="h-fit rounded-2xl border border-line bg-white p-6">
+        <aside className="h-fit rounded-2xl border border-line bg-paper p-6">
           <h2 className="font-display text-2xl">Your Order</h2>
           <ul className="mt-4 space-y-3 text-sm">
             {items.map((item) => (

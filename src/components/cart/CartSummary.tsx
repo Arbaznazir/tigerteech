@@ -30,7 +30,7 @@ export function CartSummary({
       transition={{ duration: 0.45, delay: 0.12 }}
       className="lg:sticky lg:top-28"
     >
-      <div className="overflow-hidden rounded-[1.75rem] bg-forest text-white shadow-[0_24px_60px_rgba(6,35,26,0.28)]">
+      <div className="overflow-hidden rounded-[1.75rem] bg-forest text-white shadow-[0_24px_60px_rgba(22,20,18,0.28)]">
         <div className="relative overflow-hidden px-6 pb-5 pt-7 md:px-8 md:pt-8">
           <div
             aria-hidden
@@ -108,7 +108,7 @@ export function CartSummary({
 
           <Link
             href="/checkout"
-            className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-orange px-6 text-[13px] font-bold uppercase tracking-[0.14em] text-[#111] transition hover:bg-[#ff9f4a]"
+            className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-orange px-6 text-[13px] font-bold uppercase tracking-[0.14em] text-ink transition hover:bg-orange-hot"
           >
             Checkout <ArrowRight className="size-4" strokeWidth={2.5} />
           </Link>

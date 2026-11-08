@@ -17,7 +17,7 @@ export function ContactForm() {
         <input
           required
           name="name"
-          className="w-full rounded-xl border border-line bg-[#faf9f7] px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
+          className="w-full rounded-xl border border-line bg-soft px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
         />
       </label>
       <label className="block text-sm">
@@ -26,7 +26,7 @@ export function ContactForm() {
           required
           type="email"
           name="email"
-          className="w-full rounded-xl border border-line bg-[#faf9f7] px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
+          className="w-full rounded-xl border border-line bg-soft px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
         />
       </label>
       <label className="block text-sm">
@@ -35,12 +35,12 @@ export function ContactForm() {
           required
           name="message"
           rows={5}
-          className="w-full resize-y rounded-xl border border-line bg-[#faf9f7] px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
+          className="w-full resize-y rounded-xl border border-line bg-soft px-3.5 py-3 outline-none transition focus:border-forest/30 focus:ring-2 focus:ring-orange/20"
         />
       </label>
       <button
         type="submit"
-        className="inline-flex h-12 w-full items-center justify-center rounded-full bg-forest text-[12px] font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[#0a3428] active:scale-[0.99]"
+        className="inline-flex h-12 w-full items-center justify-center rounded-full bg-forest text-[12px] font-bold uppercase tracking-[0.14em] text-white transition hover:bg-forest-deep active:scale-[0.99]"
       >
         Send Message
       </button>

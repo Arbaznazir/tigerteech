@@ -42,10 +42,10 @@ function SuggestionRow({
       onClick={onSelect}
       className={cn(
         "flex items-center gap-3 rounded-xl px-2.5 py-2 transition",
-        active ? "bg-forest text-white" : "hover:bg-soft"
+        active ? "bg-orange text-ink" : "hover:bg-soft"
       )}
     >
-      <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-[#efece7]">
+      <span className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-soft">
         <Image
           src={product.image}
           alt=""
@@ -163,8 +163,8 @@ function SearchContent() {
   const showPanel = open && (liveQuery.length > 0 || true);
 
   return (
-    <div className="bg-[#f7f5f2]">
-      <div className="border-b border-line bg-white">
+    <div className="bg-paper">
+      <div className="border-b border-line bg-paper">
         <div className="container-site py-8 md:py-12">
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.28em] text-orange">
             Smart search
@@ -182,7 +182,7 @@ function SearchContent() {
                 e.preventDefault();
                 commitSearch(value);
               }}
-              className="flex items-center gap-2 rounded-full border border-line bg-white px-4 py-3 shadow-[0_10px_30px_rgba(6,35,26,0.06)] focus-within:border-forest/30 focus-within:ring-2 focus-within:ring-orange/25"
+              className="flex items-center gap-2 rounded-full border border-line bg-paper px-4 py-3 shadow-[0_10px_30px_rgba(22,20,18,0.06)] focus-within:border-forest/30 focus-within:ring-2 focus-within:ring-orange/25"
             >
               <Search className="size-5 shrink-0 text-muted" strokeWidth={1.75} />
               <input
@@ -223,7 +223,7 @@ function SearchContent() {
               <div
                 id={listId}
                 role="listbox"
-                className="absolute left-0 right-0 top-[calc(100%+8px)] z-30 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_20px_50px_rgba(6,35,26,0.14)]"
+                className="absolute left-0 right-0 top-[calc(100%+8px)] z-30 overflow-hidden rounded-2xl border border-line bg-paper shadow-[0_20px_50px_rgba(22,20,18,0.14)]"
               >
                 {liveQuery ? (
                   <div className="p-2">
@@ -285,7 +285,7 @@ function SearchContent() {
                   setOpen(true);
                   commitSearch(chip);
                 }}
-                className="rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition hover:border-orange hover:text-orange"
+                className="rounded-full border border-line bg-paper px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink transition hover:border-orange hover:text-orange"
               >
                 {chip}
               </button>
@@ -302,14 +302,14 @@ function SearchContent() {
               {gridResults.length === 1 ? "look" : "looks"} for “{liveQuery}”
             </p>
             {gridResults.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-line bg-white px-6 py-14 text-center">
+              <div className="rounded-2xl border border-dashed border-line bg-paper px-6 py-14 text-center">
                 <p className="font-display text-3xl text-forest">No matches</p>
                 <p className="mt-2 text-sm text-muted">
                   Try a print name, category, or one of the chips above.
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+              <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
                 {gridResults.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -321,7 +321,7 @@ function SearchContent() {
             <p className="mb-5 text-[11px] font-bold uppercase tracking-[0.22em] text-muted">
               Browse with images
             </p>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
               {trending.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

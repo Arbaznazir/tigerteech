@@ -20,7 +20,7 @@ export function CartEmpty() {
         BAG
       </div>
       <div className="container-site relative flex min-h-[58vh] flex-col items-center justify-center py-20 text-center md:py-28">
-        <div className="mb-6 flex size-16 items-center justify-center rounded-full border border-forest/15 bg-white text-forest">
+        <div className="mb-6 flex size-16 items-center justify-center rounded-full border border-forest/15 bg-paper text-forest">
           <ShoppingBag className="size-6" strokeWidth={1.5} />
         </div>
         <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.32em] text-orange">

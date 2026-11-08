@@ -34,7 +34,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="relative overflow-hidden bg-[#f7f5f2]">
+    <div className="relative overflow-hidden bg-paper">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[220px] bg-[radial-gradient(ellipse_at_top,rgba(243,129,32,0.1),transparent_55%)]"

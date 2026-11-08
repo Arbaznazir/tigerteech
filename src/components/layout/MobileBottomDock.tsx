@@ -42,7 +42,7 @@ export function MobileBottomDock() {
       data-mobile-dock
       className="pointer-events-none fixed inset-x-0 bottom-0 z-[55] px-3 pb-[max(0.65rem,env(safe-area-inset-bottom))] lg:hidden"
     >
-      <div className="pointer-events-auto mx-auto flex max-w-md items-center justify-between gap-1 rounded-[1.75rem] border border-line bg-white/95 px-2 py-2 shadow-[0_12px_40px_rgba(6,35,26,0.18)] backdrop-blur-xl">
+      <div className="pointer-events-auto mx-auto flex max-w-md items-center justify-between gap-1 rounded-[1.75rem] border border-line bg-paper/95 px-2 py-2 shadow-[0_12px_40px_rgba(22,20,18,0.18)] backdrop-blur-xl">
         {items.map(({ href, label, icon: Icon, match }) => {
           const active = match(pathname);
           const isBag = href === "/cart";
@@ -53,15 +53,15 @@ export function MobileBottomDock() {
               className={cn(
                 "relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl px-2 py-2 transition",
                 active
-                  ? "bg-orange text-[#111]"
-                  : "text-[#1a1a1a]/75 active:bg-soft active:text-[#1a1a1a]"
+                  ? "bg-orange text-ink"
+                  : "text-ink/75 active:bg-soft active:text-ink"
               )}
             >
               <span className="relative">
                 <Icon
                   className={cn(
                     "size-[18px]",
-                    active ? "text-[#111]" : "text-[#1a1a1a]/80"
+                    active ? "text-ink" : "text-ink/80"
                   )}
                   strokeWidth={active ? 2.25 : 1.75}
                 />
@@ -70,7 +70,7 @@ export function MobileBottomDock() {
                     className={cn(
                       "absolute -right-2.5 -top-1.5 flex size-4 items-center justify-center rounded-full text-[9px] font-bold",
                       active
-                        ? "bg-[#111] text-orange"
+                        ? "bg-ink text-orange"
                         : "bg-orange text-white"
                     )}
                   >
@@ -81,7 +81,7 @@ export function MobileBottomDock() {
               <span
                 className={cn(
                   "text-[9px] font-bold uppercase tracking-[0.14em]",
-                  active ? "text-[#111]" : "text-[#1a1a1a]/75"
+                  active ? "text-ink" : "text-ink/75"
                 )}
               >
                 {label}

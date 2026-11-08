@@ -171,15 +171,15 @@ export function ProductDetail({ product }: { product: Product }) {
     zooming && canHoverZoom && lens.galleryW > 0 && lens.galleryH > 0;
 
   return (
-    <div className="bg-[linear-gradient(180deg,#f7f5f2_0%,#ffffff_42%,#ffffff_100%)]">
+    <div className="bg-[linear-gradient(180deg,var(--color-paper)_0%,var(--color-soft)_42%,var(--color-paper)_100%)]">
       <div className="container-site grid gap-10 py-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:py-16">
         {/* Gallery */}
         <div className="relative">
           <div
             ref={galleryRef}
             className={cn(
-              "relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#ebe7e1]",
-              "shadow-[0_28px_70px_rgba(6,35,26,0.14)]",
+              "relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-soft",
+              "shadow-[0_28px_70px_rgba(22,20,18,0.14)]",
               "ring-1 ring-black/[0.04]",
               canHoverZoom && "cursor-crosshair"
             )}
@@ -194,7 +194,7 @@ export function ProductDetail({ product }: { product: Product }) {
             {/* Soft studio atmosphere */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_18%,rgba(255,255,255,0.55),transparent_52%),linear-gradient(180deg,rgba(6,35,26,0.04)_0%,transparent_30%,rgba(6,35,26,0.18)_100%)]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_18%,rgba(255,255,255,0.55),transparent_52%),linear-gradient(180deg,rgba(22,20,18,0.04)_0%,transparent_30%,rgba(22,20,18,0.18)_100%)]"
             />
 
             <Image
@@ -213,7 +213,7 @@ export function ProductDetail({ product }: { product: Product }) {
             {zoomReady && (
               <div
                 aria-hidden
-                className="pointer-events-none absolute z-20 size-[9.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-[0_18px_40px_rgba(6,35,26,0.35)] ring-4 ring-white/80 md:size-[11.5rem]"
+                className="pointer-events-none absolute z-20 size-[9.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-orange shadow-[0_18px_40px_rgba(22,20,18,0.35)] ring-4 ring-white/80 md:size-[11.5rem]"
                 style={{
                   left: lens.x,
                   top: lens.y,
@@ -247,7 +247,7 @@ export function ProductDetail({ product }: { product: Product }) {
                       aria-label={`View image ${i + 1}`}
                       aria-pressed={activeImage === i}
                       className={cn(
-                        "relative size-[3.35rem] overflow-hidden rounded-xl bg-white/90 shadow-[0_10px_24px_rgba(6,35,26,0.22)] backdrop-blur-sm transition duration-300 md:size-16",
+                        "relative size-[3.35rem] overflow-hidden rounded-xl bg-paper/90 shadow-[0_10px_24px_rgba(22,20,18,0.22)] backdrop-blur-sm transition duration-300 md:size-16",
                         "ring-2 ring-offset-2 ring-offset-transparent",
                         activeImage === i
                           ? "scale-105 ring-orange"
@@ -265,7 +265,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   ))}
                 </div>
                 {canHoverZoom && (
-                  <p className="mb-1 hidden rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-forest shadow-sm backdrop-blur-sm sm:block">
+                  <p className="mb-1 hidden rounded-full bg-paper/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-forest shadow-sm backdrop-blur-sm sm:block">
                     Hover to zoom
                   </p>
                 )}
@@ -307,7 +307,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     "size-3.5",
                     i < Math.round(product.rating)
                       ? "fill-orange text-orange"
-                      : "fill-transparent text-[#d5d0c8]"
+                      : "fill-transparent text-line"
                   )}
                 />
               ))}
@@ -337,8 +337,8 @@ export function ProductDetail({ product }: { product: Product }) {
                   className={cn(
                     "min-w-12 rounded-xl border px-3.5 py-2.5 text-sm font-bold transition",
                     size === s
-                      ? "border-forest bg-forest text-white shadow-[0_10px_24px_rgba(6,38,31,0.25)]"
-                      : "border-line bg-white text-ink hover:border-forest/40"
+                      ? "border-orange bg-orange text-ink shadow-[0_10px_24px_rgba(243,129,32,0.35)]"
+                      : "border-line bg-paper text-ink hover:border-orange/50"
                   )}
                 >
                   {s}
@@ -348,7 +348,7 @@ export function ProductDetail({ product }: { product: Product }) {
           </div>
 
           <div className="mt-6 flex items-center gap-3">
-            <div className="flex items-center overflow-hidden rounded-full border border-line bg-white">
+            <div className="flex items-center overflow-hidden rounded-full border border-line bg-paper">
               <button
                 type="button"
                 className="px-4 py-2.5 text-lg leading-none text-ink transition hover:bg-soft"
@@ -377,7 +377,7 @@ export function ProductDetail({ product }: { product: Product }) {
               variant="forest"
               size="lg"
               onClick={handleAdd}
-              className="min-h-13 flex-1 rounded-2xl tracking-[0.14em] shadow-[0_16px_36px_rgba(6,38,31,0.28)]"
+              className="min-h-13 flex-1 rounded-2xl tracking-[0.14em] shadow-[0_16px_36px_rgba(18,16,14,0.28)]"
             >
               <ShoppingBag className="size-4" strokeWidth={2.25} />
               {added ? "Added to Cart" : "Add to Cart"}
@@ -386,7 +386,7 @@ export function ProductDetail({ product }: { product: Product }) {
               type="button"
               variant="ghost"
               size="lg"
-              className="rounded-2xl border border-line bg-white"
+              className="rounded-2xl border border-line bg-paper"
               onClick={() => toggleWishlist(product.id)}
             >
               <Heart
@@ -414,7 +414,7 @@ export function ProductDetail({ product }: { product: Product }) {
             ].map(({ icon: Icon, text }) => (
               <li
                 key={text}
-                className="flex items-start gap-2.5 rounded-2xl border border-line/80 bg-white/70 px-3.5 py-3 text-[12px] font-semibold leading-snug text-muted"
+                className="flex items-start gap-2.5 rounded-2xl border border-line/80 bg-paper/70 px-3.5 py-3 text-[12px] font-semibold leading-snug text-muted"
               >
                 <Icon className="mt-0.5 size-4 shrink-0 text-orange" strokeWidth={2} />
                 {text}
@@ -427,7 +427,7 @@ export function ProductDetail({ product }: { product: Product }) {
       {/* Details: description + specs — before reviews */}
       <section
         id="details"
-        className="border-t border-line/80 bg-white"
+        className="border-t border-line/80 bg-paper"
         aria-labelledby="details-heading"
       >
         <div className="container-site py-12 md:py-16">
@@ -442,12 +442,12 @@ export function ProductDetail({ product }: { product: Product }) {
               >
                 Details
               </h2>
-              <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#3d3d3d] md:text-base">
+              <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted md:text-base">
                 {product.description}
               </p>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-line bg-[#f7f5f2]/60">
+            <div className="overflow-hidden rounded-2xl border border-line bg-soft/60">
               <button
                 type="button"
                 onClick={() => setSpecsOpen((o) => !o)}

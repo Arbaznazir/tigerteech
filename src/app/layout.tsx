@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Caveat, Montserrat, Permanent_Marker } from "next/font/google";
+import { Caveat, Montserrat, Oswald, Yellowtail } from "next/font/google";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomDock } from "@/components/layout/MobileBottomDock";
-import { IntroPreloader } from "@/components/providers/IntroPreloader";
 import { StoreHydration } from "@/components/providers/StoreHydration";
 import "./globals.css";
 
@@ -14,10 +13,10 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const bebas = Bebas_Neue({
-  variable: "--font-bebas",
+const oswald = Oswald({
+  variable: "--font-oswald",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["500", "600", "700"],
 });
 
 const caveat = Caveat({
@@ -26,7 +25,7 @@ const caveat = Caveat({
   weight: ["500", "700"],
 });
 
-const brush = Permanent_Marker({
+const brush = Yellowtail({
   variable: "--font-brush",
   subsets: ["latin"],
   weight: "400",
@@ -55,16 +54,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${bebas.variable} ${caveat.variable} ${brush.variable} intro-loading h-full antialiased`}
+      className={`${montserrat.variable} ${oswald.variable} ${caveat.variable} ${brush.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-white text-ink">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.remove('intro-loading');}}catch(e){}})();`,
-          }}
-        />
+      <body className="flex min-h-full flex-col bg-paper text-ink">
         <StoreHydration />
-        <IntroPreloader />
         <AnnouncementBar />
         <Header />
         <main className="flex-1">{children}</main>
