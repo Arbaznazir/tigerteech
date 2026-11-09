@@ -1,8 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import jungleImg from "../../../public/images/instagram/jungle.webp";
+import savannahImg from "../../../public/images/instagram/savannah.webp";
 
 function SocialIg({ className }: { className?: string }) {
   return (
@@ -20,18 +22,22 @@ function SocialIg({ className }: { className?: string }) {
   );
 }
 
-const faces = [
+const faces: {
+  src: StaticImageData;
+  alt: string;
+  label: string;
+}[] = [
   {
-    src: "/images/instagram/jungle.jpg",
-    alt: "Tigerteeh in the jungle — tiger, macaw, owl",
+    src: jungleImg,
+    alt: "Tigerteeh crew in the jungle — tigers, macaws, owl, and python",
     label: "Jungle",
   },
   {
-    src: "/images/instagram/savannah.jpg",
-    alt: "Tigerteeh on the savannah — tigers, lions at sunset",
+    src: savannahImg,
+    alt: "Tigerteeh on the savannah — crew with tigers and lions at sunset",
     label: "Savannah",
   },
-] as const;
+];
 
 export function InstagramStrip() {
   const [flipped, setFlipped] = useState(false);
