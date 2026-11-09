@@ -68,7 +68,7 @@ function ZoomClone({
           src={src}
           alt=""
           fill
-          className="object-cover"
+          className="object-cover object-top"
           sizes="(max-width:1024px) 100vw, 52vw"
         />
       </div>
@@ -178,7 +178,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <div
             ref={galleryRef}
             className={cn(
-              "relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-soft",
+              "relative aspect-[2/3] overflow-hidden rounded-[1.75rem] bg-soft",
               "shadow-[0_28px_70px_rgba(22,20,18,0.14)]",
               "ring-1 ring-black/[0.04]",
               canHoverZoom && "cursor-crosshair"
@@ -202,7 +202,7 @@ export function ProductDetail({ product }: { product: Product }) {
               alt={product.name}
               fill
               className={cn(
-                "object-cover transition duration-500",
+                "object-cover object-top transition duration-500",
                 zoomReady && "opacity-95"
               )}
               sizes="(max-width:1024px) 100vw, 52vw"

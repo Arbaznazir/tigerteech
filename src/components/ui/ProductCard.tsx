@@ -76,14 +76,14 @@ export function ProductCard({ product }: Props) {
         <div className="relative shrink-0">
           <Link
             href={`/product/${product.slug}`}
-            className="relative block aspect-[4/5] overflow-hidden bg-soft"
+            className="relative block aspect-[2/3] overflow-hidden bg-soft"
           >
             <Image
               src={product.image}
               alt={product.name}
               fill
               sizes="(max-width:768px) 50vw, 22vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
             />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,9,8,0.12)_0%,transparent_32%,transparent_68%,rgba(10,9,8,0.28)_100%)]" />
             <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 group-hover:bg-[radial-gradient(circle_at_50%_20%,rgba(243,129,32,0.16),transparent_50%)]" />
