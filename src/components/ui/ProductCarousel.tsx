@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import Link from "next/link";
 import { ProductCard } from "./ProductCard";
@@ -15,7 +15,12 @@ type Props = {
   products: Product[];
   variant?: "bestseller" | "arrival";
   columns?: 4 | 5;
+  /** Mobile auto-advance (default on) */
+  autoScroll?: boolean;
 };
+
+const AUTOPLAY_MS = 2800;
+const RESUME_MS = 5000;
 
 export function ProductCarousel({
   eyebrow,
@@ -25,19 +30,92 @@ export function ProductCarousel({
   products,
   variant = "bestseller",
   columns = 4,
+  autoScroll = true,
 }: Props) {
+  const sectionRef = useRef<HTMLElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const pauseUntil = useRef(0);
+  const inView = useRef(false);
 
-  const scrollBy = (dir: -1 | 1) => {
+  const cardStep = useCallback(() => {
     const el = scroller.current;
-    if (!el) return;
+    if (!el) return 280;
     const card = el.querySelector<HTMLElement>("[data-card]");
-    const amount = (card?.offsetWidth ?? 280) + 20;
-    el.scrollBy({ left: dir * amount, behavior: "smooth" });
-  };
+    const styles = window.getComputedStyle(el);
+    const gap = parseFloat(styles.columnGap || styles.gap || "16") || 16;
+    return (card?.offsetWidth ?? 280) + gap;
+  }, []);
+
+  const scrollBy = useCallback(
+    (dir: -1 | 1) => {
+      const el = scroller.current;
+      if (!el) return;
+      el.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
+    },
+    [cardStep]
+  );
+
+  const pauseAutoplay = useCallback(() => {
+    pauseUntil.current = Date.now() + RESUME_MS;
+  }, []);
+
+  useEffect(() => {
+    if (!autoScroll || products.length < 2) return;
+
+    const el = scroller.current;
+    const section = sectionRef.current;
+    if (!el || !section) return;
+
+    const mobileMq = window.matchMedia("(max-width: 767px)");
+    const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const onIntersect: IntersectionObserverCallback = ([entry]) => {
+      inView.current = Boolean(entry?.isIntersecting);
+    };
+    const observer = new IntersectionObserver(onIntersect, {
+      root: null,
+      threshold: 0.2,
+      rootMargin: "0px 0px -8% 0px",
+    });
+    observer.observe(section);
+
+    const advance = () => {
+      if (!mobileMq.matches || reduceMq.matches) return;
+      if (!inView.current) return;
+      if (Date.now() < pauseUntil.current) return;
+
+      const max = el.scrollWidth - el.clientWidth;
+      if (max <= 8) return;
+
+      const atEnd = el.scrollLeft >= max - 16;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+        return;
+      }
+      el.scrollBy({ left: cardStep(), behavior: "smooth" });
+    };
+
+    // Kick once shortly after mount/in-view so it feels alive
+    const kick = window.setTimeout(advance, 900);
+    const timer = window.setInterval(advance, AUTOPLAY_MS);
+
+    const onPointer = () => pauseAutoplay();
+    el.addEventListener("pointerdown", onPointer, { passive: true });
+    el.addEventListener("touchstart", onPointer, { passive: true });
+    el.addEventListener("wheel", onPointer, { passive: true });
+
+    return () => {
+      window.clearTimeout(kick);
+      window.clearInterval(timer);
+      observer.disconnect();
+      el.removeEventListener("pointerdown", onPointer);
+      el.removeEventListener("touchstart", onPointer);
+      el.removeEventListener("wheel", onPointer);
+    };
+  }, [autoScroll, cardStep, pauseAutoplay, products.length]);
 
   return (
-    <section className="container-site py-9 md:py-12">
+    <section ref={sectionRef} className="container-site py-9 md:py-12">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4 md:mb-8">
         <div>
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.26em] text-orange">
@@ -58,7 +136,10 @@ export function ProductCarousel({
           <button
             type="button"
             aria-label="Previous"
-            onClick={() => scrollBy(-1)}
+            onClick={() => {
+              pauseAutoplay();
+              scrollBy(-1);
+            }}
             className="flex size-10 items-center justify-center rounded-full border border-line bg-paper text-ink transition hover:border-orange hover:bg-orange hover:text-ink"
           >
             <ChevronLeft className="size-4" />
@@ -66,7 +147,10 @@ export function ProductCarousel({
           <button
             type="button"
             aria-label="Next"
-            onClick={() => scrollBy(1)}
+            onClick={() => {
+              pauseAutoplay();
+              scrollBy(1);
+            }}
             className="flex size-10 items-center justify-center rounded-full border border-line bg-paper text-ink transition hover:border-orange hover:bg-orange hover:text-ink"
           >
             <ChevronRight className="size-4" />
@@ -77,7 +161,11 @@ export function ProductCarousel({
       <div
         ref={scroller}
         className={cn(
-          "scrollbar-hide grid auto-cols-[minmax(220px,78vw)] grid-flow-col gap-4 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory sm:auto-cols-[minmax(240px,1fr)] sm:gap-5 md:gap-5",
+          // Fixed card widths below md so overflow (and autoplay) always exist
+          "scrollbar-hide grid grid-flow-col gap-4 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
+          "auto-cols-[minmax(220px,78vw)]",
+          "sm:auto-cols-[minmax(240px,70vw)] sm:gap-5",
+          "md:gap-5",
           columns === 5
             ? "md:auto-cols-[calc((100%-5rem)/5)]"
             : "md:auto-cols-[calc((100%-3.75rem)/4)]"

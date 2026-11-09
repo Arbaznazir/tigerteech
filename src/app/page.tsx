@@ -8,7 +8,7 @@ import { getBestsellers, getNewArrivals } from "@/data/products";
 
 export default function HomePage() {
   const bestsellers = getBestsellers();
-  const arrivals = getNewArrivals().slice(0, 5);
+  const arrivals = getNewArrivals();
 
   return (
     <>

@@ -16,10 +16,10 @@ export function PromoBanner() {
     <section ref={ref} className="relative overflow-hidden">
       <div className="relative min-h-[360px] md:min-h-[460px]">
         <Image
-          src="/images/banners/promo.jpg"
+          src="/images/banners/promo.webp"
           alt="Limited collection"
           fill
-          className="object-cover object-center"
+          className="object-cover object-[center_top]"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,20,14,0.78)_0%,rgba(4,20,14,0.4)_50%,rgba(4,20,14,0.25)_100%)]" />

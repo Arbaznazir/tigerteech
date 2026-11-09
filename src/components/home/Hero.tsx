@@ -91,6 +91,25 @@ const stats = [
 
 const AUTOPLAY_MS = 8000;
 const easeOut = [0.16, 1, 0.3, 1] as const;
+const slideEase = [0.22, 1, 0.36, 1] as const;
+
+const mediaVariants = {
+  enter: (dir: number) => ({
+    opacity: 0,
+    x: dir === 0 ? 0 : dir > 0 ? "14%" : "-14%",
+    scale: 1.06,
+  }),
+  center: {
+    opacity: 1,
+    x: "0%",
+    scale: 1,
+  },
+  exit: (dir: number) => ({
+    opacity: 0,
+    x: dir === 0 ? 0 : dir > 0 ? "-10%" : "10%",
+    scale: 1.02,
+  }),
+};
 
 function SplitText({
   text,
@@ -131,7 +150,7 @@ function SplitText({
 }
 
 export function Hero() {
-  const [index, setIndex] = useState(0);
+  const [[index, direction], setPage] = useState([0, 0]);
   const [hint, setHint] = useState(true);
   const slide = slides[index];
   const touchX = useRef<number | null>(null);
@@ -161,7 +180,17 @@ export function Hero() {
   const curveOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.4]);
 
   const go = useCallback((dir: 1 | -1) => {
-    setIndex((i) => (i + dir + slides.length) % slides.length);
+    setPage(([i]) => [(i + dir + slides.length) % slides.length, dir]);
+    setHint(false);
+  }, []);
+
+  const jumpTo = useCallback((next: number) => {
+    setPage(([i]) => {
+      if (next === i) return [i, 0];
+      const forward = (next - i + slides.length) % slides.length;
+      const backward = (i - next + slides.length) % slides.length;
+      return [next, forward <= backward ? 1 : -1];
+    });
     setHint(false);
   }, []);
 
@@ -169,7 +198,7 @@ export function Hero() {
     if (reduceMotion) return undefined;
     const t = setInterval(() => go(1), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [go, reduceMotion]);
+  }, [go, reduceMotion, index]);
 
   useEffect(() => {
     const t = setTimeout(() => setHint(false), 4200);
@@ -203,76 +232,88 @@ export function Hero() {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        <AnimatePresence initial={false} mode="sync">
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: reduceMotion ? 1 : 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: easeOut }}
-            className="absolute inset-0 will-change-transform"
-            style={{ y: imageY, scale: imageScale }}
-          >
-            {/* Ken Burns — mobile crop */}
+        {/* Scroll parallax lives outside slide enter/exit so scales don't fight */}
+        <motion.div
+          className="absolute inset-0 overflow-hidden"
+          style={{ y: imageY, scale: imageScale }}
+        >
+          <AnimatePresence initial={false} custom={direction} mode="sync">
             <motion.div
-              className="absolute inset-0 md:hidden"
-              initial={false}
-              animate={reduceMotion ? { scale: 1 } : { scale: [1.05, 1.14] }}
+              key={index}
+              custom={direction}
+              variants={mediaVariants}
+              initial={reduceMotion ? { opacity: 0 } : "enter"}
+              animate="center"
+              exit={reduceMotion ? { opacity: 0 } : "exit"}
               transition={{
-                duration: AUTOPLAY_MS / 1000,
-                ease: "linear",
+                opacity: { duration: 0.85, ease: slideEase },
+                x: { duration: 0.95, ease: slideEase },
+                scale: { duration: 1.05, ease: slideEase },
               }}
+              className="absolute inset-0 will-change-transform"
             >
-              <Image
-                src={slide.mobile}
-                alt={`${slide.lead} ${slide.accent} ${slide.trail}`.trim()}
-                fill
-                priority={index === 0}
-                sizes="(max-width: 767px) 100vw, 1px"
-                className="object-cover"
-                style={{ objectPosition: slide.mobilePosition }}
-              />
-            </motion.div>
+              {/* Ken Burns — starts after settle so slide change doesn't jump */}
+              <motion.div
+                className="absolute inset-0 origin-center md:hidden"
+                initial={{ scale: 1 }}
+                animate={{ scale: reduceMotion ? 1 : 1.1 }}
+                transition={{
+                  duration: AUTOPLAY_MS / 1000,
+                  ease: "linear",
+                  delay: 0.35,
+                }}
+              >
+                <Image
+                  src={slide.mobile}
+                  alt={`${slide.lead} ${slide.accent} ${slide.trail}`.trim()}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 767px) 100vw, 1px"
+                  className="object-cover"
+                  style={{ objectPosition: slide.mobilePosition }}
+                />
+              </motion.div>
 
-            {/* Ken Burns — desktop crop */}
-            <motion.div
-              className="absolute inset-0 hidden md:block"
-              initial={false}
-              animate={reduceMotion ? { scale: 1 } : { scale: [1.02, 1.08] }}
-              transition={{
-                duration: AUTOPLAY_MS / 1000,
-                ease: "linear",
-              }}
-            >
-              <Image
-                src={slide.desktop}
-                alt={`${slide.lead} ${slide.accent} ${slide.trail}`.trim()}
-                fill
-                priority={index === 0}
-                sizes="(max-width: 767px) 1px, 100vw"
-                className="object-cover"
-                style={{ objectPosition: slide.position }}
-              />
-            </motion.div>
+              <motion.div
+                className="absolute inset-0 origin-center hidden md:block"
+                initial={{ scale: 1 }}
+                animate={{ scale: reduceMotion ? 1 : 1.06 }}
+                transition={{
+                  duration: AUTOPLAY_MS / 1000,
+                  ease: "linear",
+                  delay: 0.35,
+                }}
+              >
+                <Image
+                  src={slide.desktop}
+                  alt={`${slide.lead} ${slide.accent} ${slide.trail}`.trim()}
+                  fill
+                  priority={index === 0}
+                  sizes="(max-width: 767px) 1px, 100vw"
+                  className="object-cover"
+                  style={{ objectPosition: slide.position }}
+                />
+              </motion.div>
 
-            {/* Mobile atmosphere veil */}
-            <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_70%_20%,transparent_0%,rgba(10,9,8,0.15)_45%,rgba(10,9,8,0.55)_78%,rgba(10,9,8,0.92)_100%),linear-gradient(180deg,rgba(10,9,8,0.35)_0%,transparent_22%,transparent_48%,rgba(10,9,8,0.78)_100%)] md:hidden" />
-            {/* Desktop veil — softer on studio slide; right-aligned slides darken the right */}
-            <div
-              className={cn(
-                "absolute inset-0 hidden md:block",
-                slide.lightVeil
-                  ? "bg-[linear-gradient(105deg,rgba(250,249,247,0.55)_0%,rgba(250,249,247,0.18)_38%,transparent_68%)]"
-                  : slide.align === "right"
-                    ? "bg-[linear-gradient(255deg,rgba(10,9,8,0.82)_0%,rgba(10,9,8,0.48)_42%,rgba(10,9,8,0.12)_72%,rgba(10,9,8,0.28)_100%)]"
-                    : "bg-[linear-gradient(105deg,rgba(10,9,8,0.82)_0%,rgba(10,9,8,0.48)_42%,rgba(10,9,8,0.12)_72%,rgba(10,9,8,0.35)_100%)]"
+              {/* Mobile atmosphere veil */}
+              <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_70%_20%,transparent_0%,rgba(10,9,8,0.15)_45%,rgba(10,9,8,0.55)_78%,rgba(10,9,8,0.92)_100%),linear-gradient(180deg,rgba(10,9,8,0.35)_0%,transparent_22%,transparent_48%,rgba(10,9,8,0.78)_100%)] md:hidden" />
+              {/* Desktop veil */}
+              <div
+                className={cn(
+                  "absolute inset-0 hidden md:block",
+                  slide.lightVeil
+                    ? "bg-[linear-gradient(105deg,rgba(250,249,247,0.55)_0%,rgba(250,249,247,0.18)_38%,transparent_68%)]"
+                    : slide.align === "right"
+                      ? "bg-[linear-gradient(255deg,rgba(10,9,8,0.82)_0%,rgba(10,9,8,0.48)_42%,rgba(10,9,8,0.12)_72%,rgba(10,9,8,0.28)_100%)]"
+                      : "bg-[linear-gradient(105deg,rgba(10,9,8,0.82)_0%,rgba(10,9,8,0.48)_42%,rgba(10,9,8,0.12)_72%,rgba(10,9,8,0.35)_100%)]"
+                )}
+              />
+              {!slide.lightVeil && (
+                <div className="pointer-events-none absolute inset-0 hidden shadow-[inset_0_0_120px_rgba(10,9,8,0.45)] md:block" />
               )}
-            />
-            {!slide.lightVeil && (
-              <div className="pointer-events-none absolute inset-0 hidden shadow-[inset_0_0_120px_rgba(10,9,8,0.45)] md:block" />
-            )}
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
 
         {/* Ambient orange wash for depth */}
         <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_20%_80%,rgba(243,129,32,0.14),transparent_50%)] mix-blend-screen md:bg-[radial-gradient(ellipse_at_18%_70%,rgba(243,129,32,0.12),transparent_45%)]" />
@@ -333,17 +374,31 @@ export function Hero() {
             slide.align === "right" && "md:justify-end"
           )}
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={`copy-${index}`}
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
+              custom={direction}
+              initial={
+                reduceMotion
+                  ? false
+                  : {
+                      opacity: 0,
+                      y: 22,
+                      x: direction > 0 ? 18 : direction < 0 ? -18 : 0,
+                    }
+              }
+              animate={{ opacity: 1, y: 0, x: 0 }}
               exit={
                 reduceMotion
                   ? undefined
-                  : { opacity: 0, y: -18, filter: "blur(6px)" }
+                  : {
+                      opacity: 0,
+                      y: -14,
+                      x: direction > 0 ? -12 : direction < 0 ? 12 : 0,
+                      filter: "blur(4px)",
+                    }
               }
-              transition={{ duration: 0.28, ease: easeOut }}
+              transition={{ duration: 0.45, ease: slideEase }}
               className={cn(
                 "relative w-full min-w-0 max-w-[380px] text-white md:max-w-[480px]",
                 slide.lightVeil && "md:text-ink",
@@ -620,10 +675,7 @@ export function Hero() {
                 key={i}
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
-                onClick={() => {
-                  setIndex(i);
-                  setHint(false);
-                }}
+                onClick={() => jumpTo(i)}
                 className="group relative h-[3px] overflow-hidden rounded-full"
               >
                 <span
