@@ -421,7 +421,8 @@ input,
 textarea,
 select,
 button {
-  font: inherit;
+  /* family only — full `font: inherit` overrides Tailwind text-* via cascade layers */
+  font-family: inherit;
 }
 
 a {

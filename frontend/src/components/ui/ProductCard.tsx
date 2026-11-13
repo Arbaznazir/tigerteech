@@ -289,7 +289,7 @@ export function ProductCard({ product }: Props) {
                 type="button"
                 onClick={handleAdd}
                 aria-label={`Add ${product.name} to cart`}
-                className="inline-flex h-8 w-full items-center justify-center gap-1 rounded-full bg-ink px-2 text-[9px] font-bold uppercase tracking-[0.1em] text-white transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9 md:gap-1.5 md:text-[10px] md:tracking-[0.12em]"
+                className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-full bg-ink px-2.5 text-[10px] font-semibold uppercase leading-none tracking-[0.06em] text-white whitespace-nowrap transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9 md:text-[11px]"
               >
                 <ShoppingBag className="size-3 shrink-0 md:size-3.5" strokeWidth={2.25} />
                 Add to Cart
