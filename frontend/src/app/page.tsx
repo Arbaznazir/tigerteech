@@ -68,7 +68,7 @@ export default async function HomePage() {
         showFlame
         products={arrivals}
         variant="arrival"
-        columns={5}
+        columns={4}
       />
       <InstagramStrip />
     </>

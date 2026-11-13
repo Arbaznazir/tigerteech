@@ -14,7 +14,8 @@ type Props = {
   showFlame?: boolean;
   products: Product[];
   variant?: "bestseller" | "arrival";
-  columns?: 4 | 5;
+  /** Desktop visible columns — kept at 4 so Add to Cart never truncates */
+  columns?: 4;
   /** Mobile auto-advance (default on) */
   autoScroll?: boolean;
 };
@@ -166,10 +167,8 @@ export function ProductCarousel({
           // Phone: ~2 cards visible so tiles stay compact
           "auto-cols-[minmax(148px,42vw)]",
           "sm:auto-cols-[minmax(160px,34vw)] sm:gap-4",
-          "md:gap-4",
-          columns === 5
-            ? "md:auto-cols-[minmax(0,calc((100%-4rem)/5))] lg:auto-cols-[minmax(0,calc((100%-5rem)/5))]"
-            : "md:auto-cols-[minmax(0,calc((100%-3rem)/4))] lg:auto-cols-[minmax(0,calc((100%-4rem)/5))]"
+          // Same tile width as Bestsellers everywhere (4-up on md+)
+          "md:gap-4 md:auto-cols-[minmax(0,calc((100%-3rem)/4))] lg:auto-cols-[minmax(0,calc((100%-4rem)/5))]"
         )}
       >
         {products.map((product) => (
