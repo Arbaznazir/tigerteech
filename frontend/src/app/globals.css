@@ -425,14 +425,22 @@ button {
   font-family: inherit;
 }
 
-/* Product card CTA — pinned size so cascade never blows out the label */
+/* Product card CTA — pinned size; never wrap or ellipsize the label */
 .product-card-cta {
-  font-size: 11px !important;
+  font-size: 10px !important;
   line-height: 1 !important;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   font-weight: 600;
   text-transform: uppercase;
   white-space: nowrap;
+  overflow: visible;
+}
+
+.product-card-cta > span {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 a {

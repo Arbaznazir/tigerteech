@@ -291,10 +291,10 @@ export function ProductCard({ product }: Props) {
                 type="button"
                 onClick={handleAdd}
                 aria-label={`Add ${product.name} to cart`}
-                className="product-card-cta inline-flex h-8 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-full bg-ink px-2.5 text-white transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9"
+                className="product-card-cta inline-flex h-8 w-full shrink-0 items-center justify-center gap-1 rounded-full bg-ink px-2 text-white transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9 md:gap-1.5 md:px-2.5"
               >
-                <ShoppingBag className="size-3.5 shrink-0" strokeWidth={2.25} />
-                <span className="truncate">Add to Cart</span>
+                <ShoppingBag className="size-3 shrink-0 md:size-3.5" strokeWidth={2.25} />
+                <span>Add to Cart</span>
               </button>
             )}
           </div>

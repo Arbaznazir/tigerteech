@@ -159,13 +159,12 @@ export function ProductCarousel({
       <div
         ref={scroller}
         className={cn(
-          // Cap desktop card width — equal-fraction columns on wide screens made tiles huge
+          // One tile width for every carousel — min 200px so "Add to Cart" never ellipsizes
           "scrollbar-hide grid grid-flow-col gap-3 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
-          // Phone: ~2 cards visible so tiles stay compact
-          "auto-cols-[minmax(148px,42vw)]",
-          "sm:auto-cols-[minmax(160px,34vw)] sm:gap-4",
-          // Same tile width as Bestsellers everywhere (4-up on md+)
-          "md:gap-4 md:auto-cols-[minmax(0,calc((100%-3rem)/4))] lg:auto-cols-[minmax(0,calc((100%-4rem)/5))]"
+          "auto-cols-[minmax(200px,72vw)]",
+          "sm:auto-cols-[minmax(200px,46vw)] sm:gap-4",
+          "md:gap-4 md:auto-cols-[minmax(200px,calc((100%-3rem)/4))]",
+          "lg:auto-cols-[minmax(200px,calc((100%-3rem)/4))]"
         )}
       >
         {products.map((product) => (
