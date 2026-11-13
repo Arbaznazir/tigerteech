@@ -40,9 +40,7 @@ export async function api<T>(
   try {
     res = await fetch(`${API_URL}${path}`, { ...opts, headers });
   } catch {
-    throw new Error(
-      "Cannot reach the API. Make sure the backend is running on port 4000."
-    );
+    throw new Error("Connection error. Please try again.");
   }
 
   const text = await res.text();

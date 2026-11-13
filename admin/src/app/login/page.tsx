@@ -31,7 +31,23 @@ export default function LoginPage() {
       saveSession(data.token, data.user);
       router.replace("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const raw = err instanceof Error ? err.message : "Login failed";
+      const lower = raw.toLowerCase();
+      if (
+        lower.includes("connection error") ||
+        lower.includes("failed to fetch") ||
+        lower.includes("network")
+      ) {
+        setError("Connection error. Please try again.");
+      } else if (
+        lower.includes("invalid credentials") ||
+        lower.includes("unauthorized") ||
+        lower.includes("401")
+      ) {
+        setError("You have entered the email or password wrong.");
+      } else {
+        setError(raw);
+      }
     } finally {
       setLoading(false);
     }

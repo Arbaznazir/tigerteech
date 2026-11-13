@@ -241,7 +241,7 @@ func (a *API) login(w http.ResponseWriter, r *http.Request) {
 	}
 	u, token, err := a.Auth.Authenticate(r.Context(), body.Email, body.Password)
 	if err != nil {
-		Error(w, http.StatusUnauthorized, "invalid credentials")
+		Error(w, http.StatusUnauthorized, "You have entered the email or password wrong.")
 		return
 	}
 	JSON(w, http.StatusOK, map[string]any{
