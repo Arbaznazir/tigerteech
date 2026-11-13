@@ -425,6 +425,16 @@ button {
   font-family: inherit;
 }
 
+/* Product card CTA — pinned size so cascade never blows out the label */
+.product-card-cta {
+  font-size: 11px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 a {
   color: inherit;
   text-decoration: none;

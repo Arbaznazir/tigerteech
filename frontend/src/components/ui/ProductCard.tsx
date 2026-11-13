@@ -185,8 +185,8 @@ export function ProductCard({ product }: Props) {
           </button>
         </div>
 
-        {/* Info */}
-        <div className="flex flex-col px-2 pb-2 pt-1.5 md:px-3 md:pb-3 md:pt-2.5">
+        {/* Info — flex-1 + mt-auto CTA keeps Add to Cart pinned to tile bottom */}
+        <div className="flex min-h-0 flex-1 flex-col px-2 pb-2 pt-1.5 md:px-3 md:pb-3 md:pt-2.5">
           <div className="mb-0.5 flex items-center justify-between gap-2 md:mb-1">
             {product.colors.length > 0 ? (
               <div className="flex items-center gap-1">
@@ -240,27 +240,29 @@ export function ProductCard({ product }: Props) {
             </span>
           </div>
 
-          {deal ? (
-            <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 md:mt-1">
+          <div className="mt-0.5 min-h-[2.25rem] md:mt-1 md:min-h-[2.5rem]">
+            {deal ? (
+              <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                <p className="text-[12px] font-extrabold tracking-tight text-ink md:text-[14px]">
+                  {product.priceMin === product.priceMax
+                    ? formatPrice(salePriceUsd(product.priceMin, deal))
+                    : `${formatPrice(salePriceUsd(product.priceMin, deal))} – ${formatPrice(salePriceUsd(product.priceMax, deal))}`}
+                </p>
+                <p className="text-[9px] font-semibold tabular-nums text-muted line-through md:text-[11px]">
+                  {formatPriceRange(product.priceMin, product.priceMax)}
+                </p>
+              </div>
+            ) : (
               <p className="text-[12px] font-extrabold tracking-tight text-ink md:text-[14px]">
-                {product.priceMin === product.priceMax
-                  ? formatPrice(salePriceUsd(product.priceMin, deal))
-                  : `${formatPrice(salePriceUsd(product.priceMin, deal))} – ${formatPrice(salePriceUsd(product.priceMax, deal))}`}
-              </p>
-              <p className="text-[9px] font-semibold tabular-nums text-muted line-through md:text-[11px]">
                 {formatPriceRange(product.priceMin, product.priceMax)}
               </p>
-            </div>
-          ) : (
-            <p className="mt-0.5 text-[12px] font-extrabold tracking-tight text-ink md:mt-1 md:text-[14px]">
-              {formatPriceRange(product.priceMin, product.priceMax)}
-            </p>
-          )}
+            )}
+          </div>
 
-          <div className="mt-1.5 md:mt-2">
+          <div className="mt-auto pt-2">
             {qty > 0 ? (
               <div
-                className="inline-flex h-8 w-full items-center justify-between rounded-full bg-orange px-1 text-ink shadow-[0_10px_24px_rgba(243,129,32,0.28)] md:h-9"
+                className="inline-flex h-8 w-full shrink-0 items-center justify-between rounded-full bg-orange px-1 text-ink shadow-[0_10px_24px_rgba(243,129,32,0.28)] md:h-9"
                 role="group"
                 aria-label={`${product.name} quantity`}
               >
@@ -289,10 +291,10 @@ export function ProductCard({ product }: Props) {
                 type="button"
                 onClick={handleAdd}
                 aria-label={`Add ${product.name} to cart`}
-                className="inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-full bg-ink px-2.5 text-[10px] font-semibold uppercase leading-none tracking-[0.06em] text-white whitespace-nowrap transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9 md:text-[11px]"
+                className="product-card-cta inline-flex h-8 w-full shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-full bg-ink px-2.5 text-white transition hover:bg-orange hover:text-ink active:scale-[0.98] md:h-9"
               >
-                <ShoppingBag className="size-3 shrink-0 md:size-3.5" strokeWidth={2.25} />
-                Add to Cart
+                <ShoppingBag className="size-3.5 shrink-0" strokeWidth={2.25} />
+                <span className="truncate">Add to Cart</span>
               </button>
             )}
           </div>
