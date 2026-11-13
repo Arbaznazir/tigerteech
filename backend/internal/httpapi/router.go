@@ -39,14 +39,25 @@ func NewRouter(a *API) http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	origins := make([]string, 0, len(a.Cfg.AllowedOrigins))
+	allowed := make(map[string]struct{}, len(a.Cfg.AllowedOrigins))
 	for _, o := range a.Cfg.AllowedOrigins {
 		if o != "" {
-			origins = append(origins, o)
+			allowed[strings.TrimRight(o, "/")] = struct{}{}
 		}
 	}
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: origins,
+		// Exact configured origins + any https://*.vercel.app (store + admin + previews).
+		AllowOriginFunc: func(_ *http.Request, origin string) bool {
+			origin = strings.TrimRight(origin, "/")
+			if origin == "" {
+				return false
+			}
+			if _, ok := allowed[origin]; ok {
+				return true
+			}
+			return strings.HasPrefix(origin, "https://") &&
+				(strings.HasSuffix(origin, ".vercel.app") || origin == "https://vercel.app")
+		},
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{
 			"Accept",
