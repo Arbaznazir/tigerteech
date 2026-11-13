@@ -76,10 +76,11 @@ func main() {
 		}
 	}
 	if err := mkt.EnsureDefaultBanners(ctx, cfg.UploadDir, cfg.PublicBaseURL, seedBannersDir); err != nil {
-		log.Fatalf("seed default banners: %v", err)
-	}
-	if err := mkt.LockDefaultBanners(ctx); err != nil {
-		log.Fatalf("lock default banners: %v", err)
+		// Don't crash the API if seed assets are missing (e.g. slim image) —
+		// banners can be published from admin later.
+		log.Printf("seed default banners skipped: %v", err)
+	} else if err := mkt.LockDefaultBanners(ctx); err != nil {
+		log.Printf("lock default banners skipped: %v", err)
 	}
 
 	emailGuard := emailguard.New()

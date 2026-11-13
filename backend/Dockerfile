@@ -19,6 +19,7 @@ RUN apt-get update \
   && mkdir -p /app/uploads
 
 COPY --from=build /out/api /app/api
+COPY --from=build /src/seed /app/seed
 
 ENV ADDR=:4000
 ENV UPLOAD_DIR=/app/uploads
