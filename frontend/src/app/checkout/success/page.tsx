@@ -14,10 +14,10 @@ function SuccessContent() {
   return (
     <div className="container-site flex flex-col items-center py-20 text-center">
       <CheckCircle2 className="mb-4 size-16 text-orange" />
-      <h1 className="font-display text-4xl md:text-5xl">Order Placed</h1>
+      <h1 className="font-display text-4xl md:text-5xl">Order Received</h1>
       <p className="mt-3 max-w-md text-muted">
-        Thanks for shopping with Tigerteeh. This is a demo checkout — no payment
-        was charged.
+        We got your order. You can track it in your account — it will move to
+        Order Accepted, Out for Delivery, then Delivered as we process it.
       </p>
       <p className="mt-6 rounded-full bg-forest px-5 py-2 text-sm font-semibold text-white">
         Order ID: {orderId}

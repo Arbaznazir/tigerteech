@@ -238,6 +238,176 @@ body {
   }
 }
 
+/* Promo / coupon card animated backgrounds */
+@keyframes promo-ember {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    opacity: 1;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.92;
+  }
+}
+
+@keyframes promo-aurora {
+  0% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+  100% {
+    background-position: 0% 40%;
+  }
+}
+
+@keyframes promo-stripe {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 0;
+  }
+}
+
+@keyframes promo-spark {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes promo-midnight {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes promo-gold {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.promo-card-bg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.promo-card-bg--ember {
+  background: linear-gradient(
+    125deg,
+    #161412 0%,
+    #3a2818 42%,
+    #f38120 78%,
+    #161412 100%
+  );
+  background-size: 200% 200%;
+  animation: promo-ember 7s ease-in-out infinite;
+}
+
+.promo-card-bg--aurora {
+  background: linear-gradient(
+    120deg,
+    #0a0908,
+    #3a3228,
+    #c4a574,
+    #f38120,
+    #0a0908
+  );
+  background-size: 280% 280%;
+  animation: promo-aurora 9s ease-in-out infinite;
+}
+
+.promo-card-bg--stripe {
+  background-color: #161412;
+  background-image: repeating-linear-gradient(
+    -28deg,
+    transparent,
+    transparent 10px,
+    rgba(243, 129, 32, 0.22) 10px,
+    rgba(243, 129, 32, 0.22) 14px
+  );
+  background-size: 48px 48px;
+  animation: promo-stripe 1.1s linear infinite;
+}
+
+.promo-card-bg--spark {
+  background: linear-gradient(145deg, #0a0908, #2a2218 55%, #161412);
+}
+
+.promo-card-bg--spark::after {
+  content: "";
+  position: absolute;
+  inset: -20% -40%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(250, 249, 247, 0.18),
+    transparent
+  );
+  animation: promo-spark 3.2s ease-in-out infinite;
+}
+
+.promo-card-bg--midnight {
+  background: #0a0908;
+}
+
+.promo-card-bg--midnight::before {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  left: -10%;
+  top: -20%;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(243, 129, 32, 0.45),
+    transparent 68%
+  );
+  animation: promo-midnight 5.5s ease-in-out infinite;
+}
+
+.promo-card-bg--gold {
+  background: linear-gradient(120deg, #3a3228, #c4a574, #faf9f7, #c4a574, #161412);
+  background-size: 240% 240%;
+  animation: promo-gold 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-card-bg--ember,
+  .promo-card-bg--aurora,
+  .promo-card-bg--stripe,
+  .promo-card-bg--gold,
+  .promo-card-bg--spark::after,
+  .promo-card-bg--midnight::before {
+    animation: none !important;
+  }
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

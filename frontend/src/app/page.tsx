@@ -2,19 +2,55 @@ import { CategoryCircles } from "@/components/home/CategoryCircles";
 import { FeatureBar } from "@/components/home/FeatureBar";
 import { Hero } from "@/components/home/Hero";
 import { InstagramStrip } from "@/components/home/InstagramStrip";
+import { OffersStrip } from "@/components/home/OffersStrip";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { ProductCarousel } from "@/components/ui/ProductCarousel";
-import { getBestsellers, getNewArrivals } from "@/data/products";
+import {
+  fetchBanners,
+  fetchBestsellers,
+  fetchCategories,
+  fetchNewArrivals,
+  setCategoryCache,
+  setProductCache,
+} from "@/lib/catalog";
+import { HERO_PRELOAD_IMAGES } from "@/lib/bannerAssets";
+import { fetchActivePromotions } from "@/lib/promotions";
 
-export default function HomePage() {
-  const bestsellers = getBestsellers();
-  const arrivals = getNewArrivals();
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [
+    categories,
+    bestsellers,
+    arrivals,
+    heroBanners,
+    promoBanners,
+    promotions,
+  ] = await Promise.all([
+    fetchCategories().catch(() => []),
+    fetchBestsellers().catch(() => []),
+    fetchNewArrivals().catch(() => []),
+    fetchBanners("hero").catch(() => []),
+    fetchBanners("promo_mid").catch(() => []),
+    fetchActivePromotions().catch(() => []),
+  ]);
+
+  setCategoryCache(categories);
+  setProductCache([
+    ...bestsellers,
+    ...arrivals.filter((a) => !bestsellers.some((b) => b.id === a.id)),
+  ]);
 
   return (
     <>
-      <Hero />
-      <CategoryCircles />
+      {HERO_PRELOAD_IMAGES.map((href) => (
+        <link key={href} rel="preload" as="image" href={href} />
+      ))}
+      <link rel="preload" as="image" href="/images/banners/promo.webp" />
+      <Hero apiBanners={heroBanners} />
+      <CategoryCircles categories={categories} />
       <FeatureBar />
+      <OffersStrip offers={promotions} />
       <ProductCarousel
         eyebrow="Trending Now"
         title="Bestsellers"
@@ -24,7 +60,7 @@ export default function HomePage() {
         variant="bestseller"
         columns={4}
       />
-      <PromoBanner />
+      <PromoBanner banner={promoBanners[0] ?? null} />
       <ProductCarousel
         eyebrow="Fresh Style"
         title="New Arrivals"

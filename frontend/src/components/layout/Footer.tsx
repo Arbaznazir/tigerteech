@@ -39,6 +39,7 @@ const info = [
 
 const useful = [
   { href: "/shipping-methods", label: "Shipping Methods" },
+  { href: "/cod", label: "COD Availability" },
   { href: "/terms-condition", label: "Terms & Condition" },
   { href: "/privacy-policy", label: "Privacy Policy" },
 ];
@@ -46,6 +47,7 @@ const useful = [
 const cats = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/cod", label: "COD List" },
   { href: "/shop/men", label: "Men" },
   { href: "/shop/women", label: "Women" },
 ];

@@ -161,14 +161,15 @@ export function ProductCarousel({
       <div
         ref={scroller}
         className={cn(
-          // Fixed card widths below md so overflow (and autoplay) always exist
-          "scrollbar-hide grid grid-flow-col gap-4 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
-          "auto-cols-[minmax(220px,78vw)]",
-          "sm:auto-cols-[minmax(240px,70vw)] sm:gap-5",
-          "md:gap-5",
+          // Cap desktop card width — equal-fraction columns on wide screens made tiles huge
+          "scrollbar-hide grid grid-flow-col gap-3 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
+          // Phone: ~2 cards visible so tiles stay compact
+          "auto-cols-[minmax(148px,42vw)]",
+          "sm:auto-cols-[minmax(160px,34vw)] sm:gap-4",
+          "md:gap-4",
           columns === 5
-            ? "md:auto-cols-[calc((100%-5rem)/5)]"
-            : "md:auto-cols-[calc((100%-3.75rem)/4)]"
+            ? "md:auto-cols-[minmax(0,calc((100%-4rem)/5))] lg:auto-cols-[minmax(0,calc((100%-5rem)/5))]"
+            : "md:auto-cols-[minmax(0,calc((100%-3rem)/4))] lg:auto-cols-[minmax(0,calc((100%-4rem)/5))]"
         )}
       >
         {products.map((product) => (

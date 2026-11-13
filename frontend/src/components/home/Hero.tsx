@@ -9,9 +9,22 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
 import { ArrowRight, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { cn } from "@/lib/cn";
+import type { ApiBanner } from "@/lib/catalog";
+import {
+  HERO_PRELOAD_IMAGES,
+  isRemoteImage,
+  resolveBannerImage,
+} from "@/lib/bannerAssets";
 
 type Slide = {
   desktop: string;
@@ -27,13 +40,15 @@ type Slide = {
   scriptPos: string;
   cta: string;
   secondary: string;
+  ctaHref?: string;
   /** Lighter left overlay — studio slide has open negative space for type */
   lightVeil?: boolean;
   /** Desktop copy side — slide 3 keeps the tiger clear on the left */
   align?: "left" | "right";
 };
 
-const slides: Slide[] = [
+/** Built-in storefront slides — used until admin publishes hero banners. */
+const DEFAULT_SLIDES: Slide[] = [
   {
     desktop: "/images/banners/hero_desktop_1.webp",
     mobile: "/images/banners/hero_mobile_1.webp",
@@ -48,6 +63,7 @@ const slides: Slide[] = [
     scriptPos: "right-[5%] top-[13%]",
     cta: "Shop Now",
     secondary: "Watch Video",
+    ctaHref: "/shop",
     lightVeil: true,
   },
   {
@@ -64,6 +80,7 @@ const slides: Slide[] = [
     scriptPos: "right-[4%] top-[38%]",
     cta: "Explore Collection",
     secondary: "See Lookbook",
+    ctaHref: "/shop",
   },
   {
     desktop: "/images/banners/hero_desktop_3.webp",
@@ -79,9 +96,46 @@ const slides: Slide[] = [
     scriptPos: "left-[5%] top-[16%]",
     cta: "Shop Now",
     secondary: "Track Order",
+    ctaHref: "/shop",
     align: "right",
   },
 ];
+
+function slidesFromBanners(banners: ApiBanner[]): Slide[] {
+  return banners
+    .filter((b) => b.imageDesktopUrl || b.imageMobileUrl)
+    .map((b, i) => {
+      const copy = (b.copy || {}) as Record<string, string | boolean | undefined>;
+      const fallback = DEFAULT_SLIDES[i] ?? DEFAULT_SLIDES[0];
+      return {
+        desktop: resolveBannerImage(
+          b.imageDesktopUrl || b.imageMobileUrl,
+          fallback.desktop
+        ),
+        mobile: resolveBannerImage(
+          b.imageMobileUrl || b.imageDesktopUrl,
+          fallback.mobile
+        ),
+        position: b.objectPositionDesktop || fallback.position || "center",
+        mobilePosition:
+          b.objectPositionMobile || fallback.mobilePosition || "center",
+        eyebrow: String(copy.eyebrow || b.title || fallback.eyebrow),
+        lead: String(copy.lead || fallback.lead),
+        accent: String(copy.accent || fallback.accent),
+        trail: String(copy.trail ?? fallback.trail),
+        subtitle: String(copy.subtitle || b.subtitle || fallback.subtitle),
+        script: String(copy.script || fallback.script),
+        scriptPos: String(copy.scriptPos || fallback.scriptPos),
+        cta: b.ctaLabel || String(copy.cta || fallback.cta),
+        secondary: String(copy.secondary || fallback.secondary),
+        ctaHref: b.ctaHref || fallback.ctaHref || "/shop",
+        lightVeil: Boolean(
+          copy.lightVeil ?? (i === 0 ? fallback.lightVeil : false)
+        ),
+        align: copy.align === "right" ? "right" : fallback.align || "left",
+      };
+    });
+}
 
 const stats = [
   { value: "10K+", label: "Happy Customers" },
@@ -149,13 +203,42 @@ function SplitText({
   );
 }
 
-export function Hero() {
+export function Hero({ apiBanners = [] }: { apiBanners?: ApiBanner[] }) {
+  const slides = useMemo(() => {
+    const fromApi = slidesFromBanners(apiBanners);
+    if (fromApi.length === 0) return DEFAULT_SLIDES;
+    // Need ≥2 slides for autoplay/swipe — pad with built-ins if admin only published one.
+    if (fromApi.length >= 2) return fromApi;
+    const used = new Set(fromApi.map((s) => s.desktop));
+    const pad = DEFAULT_SLIDES.filter((s) => !used.has(s.desktop));
+    return [...fromApi, ...pad].slice(0, Math.max(3, fromApi.length));
+  }, [apiBanners]);
   const [[index, direction], setPage] = useState([0, 0]);
   const [hint, setHint] = useState(true);
-  const slide = slides[index];
+  const slide = slides[index] ?? slides[0];
   const touchX = useRef<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion() === true;
+
+  useEffect(() => {
+    setPage([0, 0]);
+  }, [slides.length]);
+
+  // Warm the built-in hero photos so slide changes never flash empty.
+  useEffect(() => {
+    HERO_PRELOAD_IMAGES.forEach((href) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.href = href;
+      link.dataset.ttHeroPreload = "1";
+      if (!document.head.querySelector(`link[data-tt-hero-preload][href="${href}"]`)) {
+        document.head.appendChild(link);
+      }
+      const img = new window.Image();
+      img.src = href;
+    });
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -179,26 +262,33 @@ export function Hero() {
   );
   const curveOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.4]);
 
-  const go = useCallback((dir: 1 | -1) => {
-    setPage(([i]) => [(i + dir + slides.length) % slides.length, dir]);
-    setHint(false);
-  }, []);
+  const go = useCallback(
+    (dir: 1 | -1) => {
+      if (slides.length < 2) return;
+      setPage(([i]) => [(i + dir + slides.length) % slides.length, dir]);
+      setHint(false);
+    },
+    [slides.length]
+  );
 
-  const jumpTo = useCallback((next: number) => {
-    setPage(([i]) => {
-      if (next === i) return [i, 0];
-      const forward = (next - i + slides.length) % slides.length;
-      const backward = (i - next + slides.length) % slides.length;
-      return [next, forward <= backward ? 1 : -1];
-    });
-    setHint(false);
-  }, []);
+  const jumpTo = useCallback(
+    (next: number) => {
+      setPage(([i]) => {
+        if (next === i) return [i, 0];
+        const forward = (next - i + slides.length) % slides.length;
+        const backward = (i - next + slides.length) % slides.length;
+        return [next, forward <= backward ? 1 : -1];
+      });
+      setHint(false);
+    },
+    [slides.length]
+  );
 
   useEffect(() => {
-    if (reduceMotion) return undefined;
+    if (reduceMotion || slides.length < 2) return undefined;
     const t = setInterval(() => go(1), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [go, reduceMotion, index]);
+  }, [go, reduceMotion, index, slides.length]);
 
   useEffect(() => {
     const t = setTimeout(() => setHint(false), 4200);
@@ -215,6 +305,27 @@ export function Hero() {
     if (Math.abs(dx) < 48) return;
     go(dx < 0 ? 1 : -1);
   };
+
+  if (!slide) {
+    return (
+      <section className="relative flex min-h-[50vh] items-center justify-center bg-forest-deep px-6 text-center text-white">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-orange">
+            Tigerteeh
+          </p>
+          <h1 className="mt-3 font-display text-4xl tracking-wide">
+            Add hero banners in admin
+          </h1>
+          <Link
+            href="/shop"
+            className="mt-6 inline-flex rounded-full bg-orange px-6 py-3 text-xs font-bold uppercase tracking-wide text-ink"
+          >
+            Shop Now
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -271,6 +382,7 @@ export function Hero() {
                   sizes="(max-width: 767px) 100vw, 1px"
                   className="object-cover"
                   style={{ objectPosition: slide.mobilePosition }}
+                  unoptimized={isRemoteImage(slide.mobile)}
                 />
               </motion.div>
 
@@ -292,6 +404,7 @@ export function Hero() {
                   sizes="(max-width: 767px) 1px, 100vw"
                   className="object-cover"
                   style={{ objectPosition: slide.position }}
+                  unoptimized={isRemoteImage(slide.desktop)}
                 />
               </motion.div>
 
@@ -517,7 +630,7 @@ export function Hero() {
                   style={{ animationDelay: "1.2s" }}
                 >
                   <Link
-                    href="/shop"
+                    href={slide.ctaHref || "/shop"}
                     className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-orange px-7 text-[12px] font-bold uppercase tracking-[0.12em] text-ink shadow-[0_14px_36px_rgba(243,129,32,0.45)] transition hover:bg-orange-hot active:scale-[0.97] md:h-[48px] md:px-8 md:text-[13px]"
                   >
                     <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition duration-700 group-hover:translate-x-full" />

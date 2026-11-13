@@ -39,6 +39,12 @@ export function CartEmpty() {
             Shop the drop
           </Button>
           <Link
+            href="/account/orders"
+            className="inline-flex h-12 items-center gap-2 rounded-full border border-line bg-paper px-5 text-sm font-semibold uppercase tracking-wide text-forest transition hover:border-orange/50 hover:text-orange"
+          >
+            My orders
+          </Link>
+          <Link
             href="/shop/new-arrivals"
             className="inline-flex h-12 items-center gap-2 px-4 text-sm font-semibold uppercase tracking-wide text-forest transition hover:text-orange"
           >

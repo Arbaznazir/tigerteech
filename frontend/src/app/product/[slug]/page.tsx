@@ -3,17 +3,18 @@ import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/product/ProductDetail";
 import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { getProductBySlug, products } from "@/data/products";
+import {
+  fetchProductBySlug,
+  fetchProducts,
+} from "@/lib/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await fetchProductBySlug(slug);
   return {
     title: product?.name ?? "Product",
     description: product?.description,
@@ -22,10 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await fetchProductBySlug(slug);
   if (!product) notFound();
 
-  const related = products
+  const all = await fetchProducts({ limit: 40 }).catch(() => []);
+  const related = all
     .filter(
       (p) =>
         p.id !== product.id &&

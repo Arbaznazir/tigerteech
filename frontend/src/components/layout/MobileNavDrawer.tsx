@@ -3,8 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Heart, ShoppingBag, User, X } from "lucide-react";
+import {
+  ArrowRight,
+  Banknote,
+  Heart,
+  MapPin,
+  Package,
+  ShoppingBag,
+  User,
+  X,
+} from "lucide-react";
 import { CurrencySwitcher } from "@/components/layout/CurrencySwitcher";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 import { cn } from "@/lib/cn";
 
 const nav = [
@@ -12,6 +22,8 @@ const nav = [
   { href: "/shop/men", label: "Men", match: "prefix" as const },
   { href: "/shop/women", label: "Women", match: "prefix" as const },
   { href: "/shop", label: "Shop All", match: "exact" as const },
+  { href: "/account/orders", label: "My Orders", match: "prefix" as const },
+  { href: "/cod", label: "COD List", match: "prefix" as const },
   { href: "/about", label: "About", match: "prefix" as const },
   { href: "/contact", label: "Contact", match: "prefix" as const },
 ];
@@ -140,7 +152,46 @@ export function MobileNavDrawer({
                 <CurrencySwitcher align="left" tone="dark" />
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <Link
+                  href={user ? "/account/orders" : "/account/login"}
+                  onClick={onClose}
+                  className="relative flex flex-col items-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-2 py-3.5 text-center transition active:bg-white/12"
+                >
+                  <Package className="size-5 text-orange" strokeWidth={1.85} />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white">
+                    My Orders
+                  </span>
+                </Link>
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.06] px-2 py-3.5">
+                  <NotificationBell tone="dark" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white">
+                    Alerts
+                  </span>
+                </div>
+              </div>
+
+              <Link
+                href="/cod"
+                onClick={onClose}
+                className="mt-2 flex items-center gap-3 rounded-xl border border-orange/35 bg-orange/12 px-3.5 py-3.5 transition active:bg-orange/20"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange/20">
+                  <MapPin className="size-5 text-orange" strokeWidth={1.85} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-white">
+                    <Banknote className="size-3.5 text-orange" />
+                    COD availability
+                  </span>
+                  <span className="mt-0.5 block text-[11px] text-white/55">
+                    See countries & states with cash on delivery
+                  </span>
+                </span>
+                <ArrowRight className="size-4 shrink-0 text-white/40" />
+              </Link>
+
+              <div className="mt-2 grid grid-cols-3 gap-2">
                 {(
                   [
                     {

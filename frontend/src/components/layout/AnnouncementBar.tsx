@@ -1,23 +1,37 @@
 "use client";
 
-import { Headphones, PawPrint, RefreshCcw, Truck } from "lucide-react";
+import { Headphones, PawPrint, Percent, RefreshCcw, Truck } from "lucide-react";
+import { useActiveDeals } from "@/hooks/useActiveDeals";
+import { discountBadgeLabel, isDealLive } from "@/lib/deals";
 import { useMoney } from "@/lib/use-money";
-
-const messages = [
-  { icon: Truck, text: (p: string) => `Free Shipping on Orders Above ${p}` },
-  { icon: PawPrint, text: () => "Wear the Wild. Live the Bold." },
-  { icon: RefreshCcw, text: () => "Easy Returns" },
-  { icon: Headphones, text: () => "24/7 Support" },
-] as const;
 
 export function AnnouncementBar() {
   const { formatPrice } = useMoney();
   const freeShip = formatPrice(99);
+  const deals = useActiveDeals();
+  const liveDeal = deals.find((d) => isDealLive(d));
+  const dealLabel = liveDeal ? discountBadgeLabel(liveDeal) : "";
 
-  const items = messages.map(({ icon: Icon, text }) => ({
-    Icon,
-    label: text(freeShip),
-  }));
+  const items = [
+    {
+      Icon: Truck,
+      label: `Free Shipping on Orders Above ${freeShip}`,
+    },
+    {
+      Icon: PawPrint,
+      label: "Wear the Wild. Live the Bold.",
+    },
+    ...(dealLabel
+      ? [
+          {
+            Icon: Percent,
+            label: `Deal live · ${dealLabel}`,
+          },
+        ]
+      : []),
+    { Icon: RefreshCcw, label: "Easy Returns" },
+    { Icon: Headphones, label: "24/7 Support" },
+  ];
 
   return (
     <div className="bg-forest text-white">
@@ -28,6 +42,15 @@ export function AnnouncementBar() {
           <span className="truncate">
             Free Shipping on Orders Above {freeShip}
           </span>
+          {dealLabel ? (
+            <>
+              <span className="text-white/35">·</span>
+              <span className="inline-flex items-center gap-1 truncate font-semibold text-orange">
+                <Percent className="size-3 shrink-0" strokeWidth={2.5} />
+                {dealLabel}
+              </span>
+            </>
+          ) : null}
         </div>
         <div className="hidden items-center gap-2 sm:flex">
           <PawPrint className="size-3.5 shrink-0 text-orange" strokeWidth={2.25} />
@@ -37,6 +60,11 @@ export function AnnouncementBar() {
           <span className="inline-flex items-center gap-1.5">
             <RefreshCcw className="size-3.5 text-orange" strokeWidth={2.25} />
             Easy Returns
+            {dealLabel ? (
+              <span className="ml-1 rounded-full bg-orange/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-orange">
+                {dealLabel}
+              </span>
+            ) : null}
           </span>
           <span className="text-white/35">|</span>
           <span className="inline-flex items-center gap-1.5">

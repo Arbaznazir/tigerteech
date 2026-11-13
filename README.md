@@ -1,26 +1,45 @@
 # Tigerteeh Clothing
 
-Frontend storefront rebuild matching the design mock (`image.png`). Built with Next.js, Tailwind CSS, Framer Motion, and Zustand.
+Monorepo: storefront, seller admin, and Go API.
 
-## Run locally
-
-```bash
-npm install
-npm run dev
+```text
+tigerteehcloothing/
+├── frontend/     ← storefront (Next.js) → deploy on Vercel
+├── admin/        ← seller admin (Next.js) → deploy on Vercel
+├── backend/      ← Go API + Postgres → Railway/Render + Supabase
+└── docs/DEPLOY.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+## Deploy (Vercel + Supabase)
 
-## What’s included
+See **[`docs/DEPLOY.md`](docs/DEPLOY.md)**.
 
-- Homepage layout matching the wild safari streetwear design
-- Shop, category, product detail, search
-- Cart, wishlist, checkout (UI only — no real payments)
-- Demo account (login/register) + order history in `localStorage`
-- Product catalog seeded from [tigerteehclothing.com](https://tigerteehclothing.com/)
+- **Storefront + Admin** → Vercel (two projects, root dirs `frontend` / `admin`)
+- **Postgres** → Supabase (`DATABASE_URL`)
+- **Go API** → Railway / Render / Fly (Docker). Not Vercel serverless — needs uploads + a long-lived process.
 
-## Notes
+Demo seed: `backend/seed/demo_seed.sql` via `npm run seed` or Supabase SQL editor.
 
-Checkout and auth are **frontend mocks** for demonstration. No WooCommerce/Stripe integration in this pass.
+Admin login (default): `admin@tigerteehclothing.com` / `TigerteehAdmin1!`
 
-Agent skills from [taste-skill](https://github.com/Leonxlnx/taste-skill) live under `.cursor/skills/`.
+## Local development
+
+Optional local launcher (gitignored): `./start.sh` — opens API + storefront + admin (and share mode).
+
+```bash
+npm run install:all
+
+# API — set DATABASE_URL in backend/.env (local Postgres or Supabase)
+npm run dev:backend    # :4000
+
+# Apps
+npm run dev:frontend   # :3000
+npm run dev:admin      # :3001
+
+# Optional catalog seed (after API has migrated once)
+npm run seed
+```
+
+## Architecture plan
+
+→ [`docs/BACKEND_AND_ADMIN_PLAN.md`](docs/BACKEND_AND_ADMIN_PLAN.md)

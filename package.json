@@ -1,0 +1,17 @@
+{
+  "name": "tigerteehcloothing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tigerteeh Clothing monorepo — storefront, seller admin, and API",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:admin": "npm run dev --prefix admin",
+    "dev:backend": "cd backend && go run ./cmd/api",
+    "build:frontend": "npm run build --prefix frontend",
+    "build:admin": "npm run build --prefix admin",
+    "build:backend": "cd backend && go build -o bin/api ./cmd/api",
+    "seed": "cd backend && go run ./cmd/seed",
+    "install:all": "npm install --prefix frontend && npm install --prefix admin"
+  }
+}

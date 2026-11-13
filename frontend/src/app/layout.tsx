@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Caveat, Montserrat, Oswald, Yellowtail } from "next/font/google";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { DealCountdownBar } from "@/components/layout/DealCountdownBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomDock } from "@/components/layout/MobileBottomDock";
+import { CatalogHydration } from "@/components/providers/CatalogHydration";
+import { OnboardingModals } from "@/components/providers/OnboardingModals";
 import { StoreHydration } from "@/components/providers/StoreHydration";
 import "./globals.css";
 
@@ -19,10 +22,10 @@ const oswald = Oswald({
   weight: ["500", "600", "700"],
 });
 
+// Caveat is a variable font — omit discrete weights (Turbopack breaks on multi-weight Caveat).
 const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
-  weight: ["500", "700"],
 });
 
 const brush = Yellowtail({
@@ -58,7 +61,10 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-paper text-ink">
         <StoreHydration />
+        <CatalogHydration />
+        <OnboardingModals />
         <AnnouncementBar />
+        <DealCountdownBar />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

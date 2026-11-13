@@ -4,10 +4,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Flame } from "lucide-react";
-import { categories } from "@/data/products";
+import type { StoreCategory } from "@/lib/catalog";
 
-export function CategoryCircles() {
+/** Built-in circles — used until admin publishes categories. */
+const DEFAULT_CATEGORIES: StoreCategory[] = [
+  { slug: "men", label: "Men", image: "/images/products/parrot.jpg" },
+  { slug: "women", label: "Women", image: "/images/categories/women.png" },
+  {
+    slug: "co-ord-sets",
+    label: "Co-ord Sets",
+    image: "/images/products/serval.png",
+  },
+  {
+    slug: "full-sleeve",
+    label: "Full Sleeve",
+    image: "/images/products/donkey.png",
+  },
+  {
+    slug: "new-arrivals",
+    label: "New Arrivals",
+    image: "/images/products/goat.png",
+    icon: "flame",
+  },
+];
+
+type Props = {
+  categories?: StoreCategory[];
+};
+
+export function CategoryCircles({ categories = [] }: Props) {
   const reduceMotion = useReducedMotion();
+  const items = categories.length > 0 ? categories : DEFAULT_CATEGORIES;
 
   return (
     <section className="relative z-[3] -mt-1 bg-paper pb-5 pt-3 md:pb-4 md:pt-3">
@@ -23,7 +50,7 @@ export function CategoryCircles() {
           },
         }}
       >
-        {categories.map((cat, index) => (
+        {items.map((cat, index) => (
           <motion.div
             key={cat.slug}
             variants={{
@@ -65,6 +92,7 @@ export function CategoryCircles() {
                     fill
                     className="object-cover transition duration-500 group-hover:scale-110"
                     sizes="100px"
+                    unoptimized={cat.image.startsWith("http")}
                   />
                 )}
               </div>

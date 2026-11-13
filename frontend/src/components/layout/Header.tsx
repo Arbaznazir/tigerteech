@@ -8,6 +8,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
 import { CurrencySwitcher } from "@/components/layout/CurrencySwitcher";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 import { computeCartCount, computeCartSubtotal } from "@/lib/cart";
 import { useMoney } from "@/lib/use-money";
 import { useStore } from "@/lib/store";
@@ -17,6 +18,7 @@ const nav = [
   { href: "/", label: "Home" },
   { href: "/shop/men", label: "Men" },
   { href: "/shop/women", label: "Women" },
+  { href: "/cod", label: "COD" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -172,6 +174,8 @@ export function Header() {
             <div className="hidden sm:block">
               <CurrencySwitcher />
             </div>
+
+            <NotificationBell />
 
             <Link
               href={user ? "/account" : "/account/login"}

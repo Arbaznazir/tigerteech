@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Flame, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { categories, products, type CategorySlug } from "@/data/products";
+import type { CategorySlug, Product } from "@/data/products";
+import {
+  fetchCategories,
+  fetchProductsPage,
+  type StoreCategory,
+} from "@/lib/catalog";
 import { cn } from "@/lib/cn";
 
 type Props = {
@@ -12,6 +17,8 @@ type Props = {
 };
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "rating";
+
+const PAGE_SIZE = 12;
 
 const SORT_OPTIONS: { value: SortKey; label: string; hint: string }[] = [
   { value: "featured", label: "Featured", hint: "Editor picks first" },
@@ -25,20 +32,98 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
   const [sort, setSort] = useState<SortKey>("featured");
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [total, setTotal] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [categories, setCategories] = useState<StoreCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState("");
+
+  const categoryParam =
+    category === "all" || category === "new-arrivals" ? undefined : category;
+  const tagParam = category === "new-arrivals" ? "new_arrival" : undefined;
+
+  const loadPage = useCallback(
+    async (nextOffset: number, replace: boolean) => {
+      if (replace) setLoading(true);
+      else setLoadingMore(true);
+      setError("");
+      try {
+        const page = await fetchProductsPage({
+          category: categoryParam,
+          tag: tagParam,
+          limit: PAGE_SIZE,
+          offset: nextOffset,
+        });
+        setTotal(page.total);
+        setOffset(nextOffset + page.items.length);
+        setProducts((prev) => {
+          if (replace) return page.items;
+          const seen = new Set(prev.map((p) => p.id));
+          return [...prev, ...page.items.filter((p) => !seen.has(p.id))];
+        });
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Could not load products");
+        if (replace) {
+          setProducts([]);
+          setTotal(0);
+        }
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [categoryParam, tagParam]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const cats = await fetchCategories();
+        if (!cancelled) setCategories(cats);
+      } catch {
+        if (!cancelled) setCategories([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    setProducts([]);
+    setOffset(0);
+    setTotal(0);
+    void loadPage(0, true);
+  }, [loadPage]);
+
+  const hasMore = products.length < total;
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || !hasMore) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting) && !loading && !loadingMore) {
+          void loadPage(offset, false);
+        }
+      },
+      { rootMargin: "480px 0px" }
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, [hasMore, loading, loadingMore, loadPage, offset]);
 
   const filtered = useMemo(() => {
-    let list =
-      category === "all"
-        ? [...products]
-        : category === "new-arrivals"
-          ? products.filter((p) => p.newArrival)
-          : products.filter((p) => p.categories.includes(category));
-
+    const list = [...products];
     if (sort === "price-asc") list.sort((a, b) => a.priceMin - b.priceMin);
     if (sort === "price-desc") list.sort((a, b) => b.priceMin - a.priceMin);
     if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
     return list;
-  }, [category, sort]);
+  }, [sort, products]);
 
   const activeSort = SORT_OPTIONS.find((o) => o.value === sort) ?? SORT_OPTIONS[0];
 
@@ -69,7 +154,6 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
   return (
     <div className="bg-[linear-gradient(180deg,var(--color-paper)_0%,var(--color-soft)_28%)]">
       <div className="container-site py-8 md:py-12">
-        {/* Header */}
         <div className="mb-6 flex flex-col gap-5 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-orange">
@@ -79,12 +163,13 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
               {title}
             </h1>
             <p className="mt-2 text-sm text-muted">
-              <span className="font-semibold tabular-nums text-ink">{filtered.length}</span>{" "}
-              {filtered.length === 1 ? "look" : "looks"} in the wild
+              <span className="font-semibold tabular-nums text-ink">
+                {loading ? "…" : total}
+              </span>{" "}
+              {total === 1 ? "look" : "looks"} in the wild
             </p>
           </div>
 
-          {/* Sort dropdown */}
           <div ref={sortRef} className="relative w-full sm:w-auto sm:min-w-[220px]">
             <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
               Sort by
@@ -161,7 +246,6 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
           </div>
         </div>
 
-        {/* Category filters */}
         <div className="mb-8 md:mb-10">
           <div className="rounded-2xl border border-line/80 bg-paper/80 p-2 shadow-[0_8px_28px_rgba(22,20,18,0.04)] backdrop-blur-sm md:p-2.5">
             <div className="scrollbar-hide -mx-0.5 flex gap-1.5 overflow-x-auto px-0.5 pb-0.5 md:flex-wrap md:overflow-visible">
@@ -202,16 +286,34 @@ export function ShopGrid({ initialCategory = "all", title = "Shop All" }: Props)
           </div>
         </div>
 
-        {/* Grid */}
+        {error ? (
+          <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        ) : null}
+
         <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        <div ref={sentinelRef} className="h-8 w-full" aria-hidden />
+
+        {loading && (
+          <p className="py-16 text-center text-sm text-muted">Loading catalog…</p>
+        )}
+        {loadingMore && (
+          <p className="py-6 text-center text-sm text-muted">Loading more…</p>
+        )}
+        {!loading && !loadingMore && filtered.length === 0 && (
           <p className="py-16 text-center text-sm text-muted">
-            No looks in this filter yet — try another category.
+            No looks yet — publish products in the seller panel.
+          </p>
+        )}
+        {!loading && !hasMore && filtered.length > 0 && (
+          <p className="py-6 text-center text-xs uppercase tracking-[0.18em] text-muted">
+            End of collection
           </p>
         )}
       </div>

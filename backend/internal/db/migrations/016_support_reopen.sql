@@ -1,0 +1,2 @@
+ALTER TABLE support_tickets
+  ADD COLUMN IF NOT EXISTS reopen_count INT NOT NULL DEFAULT 0;
