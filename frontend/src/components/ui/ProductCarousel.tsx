@@ -14,8 +14,6 @@ type Props = {
   showFlame?: boolean;
   products: Product[];
   variant?: "bestseller" | "arrival";
-  /** Desktop visible columns — kept at 4 so Add to Cart never truncates */
-  columns?: 4;
   /** Mobile auto-advance (default on) */
   autoScroll?: boolean;
 };
@@ -30,7 +28,6 @@ export function ProductCarousel({
   showFlame,
   products,
   variant = "bestseller",
-  columns = 4,
   autoScroll = true,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);

@@ -58,7 +58,6 @@ export default async function HomePage() {
         showFlame
         products={bestsellers}
         variant="bestseller"
-        columns={4}
       />
       <PromoBanner banner={promoBanners[0] ?? null} />
       <ProductCarousel
@@ -68,7 +67,6 @@ export default async function HomePage() {
         showFlame
         products={arrivals}
         variant="arrival"
-        columns={4}
       />
       <InstagramStrip />
     </>
