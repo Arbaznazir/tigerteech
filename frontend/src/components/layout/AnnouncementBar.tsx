@@ -34,7 +34,7 @@ export function AnnouncementBar() {
   ];
 
   return (
-    <div className="bg-forest text-white">
+    <div className="relative z-30 bg-forest text-white">
       {/* Desktop / tablet static row */}
       <div className="mx-auto hidden h-9 max-w-[1400px] items-center justify-between gap-3 px-4 text-[10px] font-medium sm:flex md:px-8 md:text-[11px] lg:px-10">
         <div className="flex min-w-0 items-center gap-2">

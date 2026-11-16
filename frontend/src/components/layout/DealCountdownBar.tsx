@@ -157,7 +157,7 @@ export function DealCountdownBar() {
 
   return (
     <div
-      className="w-full border-t border-white/10"
+      className="relative z-30 w-full border-t border-white/10"
       style={{
         background: b.background || "#161412",
         color: b.textColor || "#FAF9F7",

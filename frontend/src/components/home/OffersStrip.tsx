@@ -62,6 +62,8 @@ export function OffersStrip({ offers }: Props) {
             const giftImg = resolveMediaUrl(offer.giftProductImage);
             const style = normalizePromoCardStyle(offer.cardStyle);
             const onDark = lightText.includes(style);
+            const isFirst = i === 0;
+            const isLast = i === offers.length - 1;
 
             return (
               <motion.article
@@ -72,16 +74,20 @@ export function OffersStrip({ offers }: Props) {
                 transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.2) }}
                 className={cn(
                   "group relative overflow-hidden rounded-2xl border border-line/80 p-3.5 shadow-[0_8px_22px_rgba(18,16,14,0.08)]",
+                  (isFirst || isLast) && "overflow-visible",
                   onDark ? "text-[#FAF9F7]" : "text-ink"
                 )}
               >
                 <div
-                  className={cn("promo-card-bg", `promo-card-bg--${style}`)}
+                  className={cn(
+                    "promo-card-bg overflow-hidden rounded-2xl",
+                    `promo-card-bg--${style}`
+                  )}
                   aria-hidden
                 />
                 <div
                   className={cn(
-                    "pointer-events-none absolute inset-0",
+                    "pointer-events-none absolute inset-0 rounded-2xl",
                     onDark
                       ? "bg-[linear-gradient(180deg,rgba(10,9,8,0.22)_0%,rgba(10,9,8,0.55)_100%)]"
                       : "bg-[linear-gradient(180deg,rgba(250,249,247,0.55)_0%,rgba(250,249,247,0.82)_100%)]"
@@ -197,6 +203,28 @@ export function OffersStrip({ offers }: Props) {
                     </span>
                   </div>
                 </div>
+                {isFirst ? (
+                  <Image
+                    src="/images/jungle/foliage-corner-first.webp"
+                    alt=""
+                    width={1254}
+                    height={1254}
+                    aria-hidden
+                    className="pointer-events-none absolute -left-11 bottom-0 z-[2] hidden h-auto w-[54%] max-w-none translate-y-[18%] select-none md:block"
+                    sizes="180px"
+                  />
+                ) : null}
+                {isLast ? (
+                  <Image
+                    src="/images/jungle/foliage-corner-last.webp"
+                    alt=""
+                    width={1254}
+                    height={1254}
+                    aria-hidden
+                    className="pointer-events-none absolute -right-10 bottom-0 z-[2] hidden h-auto w-[58%] max-w-none -translate-y-[8%] select-none md:block"
+                    sizes="190px"
+                  />
+                ) : null}
               </motion.article>
             );
           })}

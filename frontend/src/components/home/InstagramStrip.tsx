@@ -50,8 +50,24 @@ export function InstagramStrip() {
   }, [paused]);
 
   return (
-    <section className="overflow-hidden bg-soft py-12 md:py-16">
-      <div className="container-site mb-8 flex flex-col items-center text-center md:mb-10">
+    <section className="relative overflow-hidden bg-soft py-12 md:py-16">
+      <Image
+        src="/images/jungle/tree-monkey-edge.webp"
+        alt=""
+        width={887}
+        height={1774}
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 top-0 z-0 md:z-[5] h-full w-auto max-w-none -translate-x-[18%] select-none"
+      />
+      <Image
+        src="/images/jungle/tree-vines-edge.webp"
+        alt=""
+        width={887}
+        height={1774}
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 md:z-[5] h-full w-auto max-w-none translate-x-[18%] select-none"
+      />
+      <div className="container-site relative z-[2] mb-8 flex flex-col items-center text-center md:mb-10">
         <h2 className="flex flex-wrap items-center justify-center gap-3 font-display text-3xl tracking-wide text-ink md:text-4xl">
           <span className="flex size-9 items-center justify-center rounded-full bg-ink text-orange">
             <SocialIg className="size-4" />
@@ -67,7 +83,7 @@ export function InstagramStrip() {
       </div>
 
       <div
-        className="relative mx-auto flex w-full max-w-[920px] justify-center px-5 md:px-8"
+        className="relative z-[2] mx-auto flex w-full max-w-[920px] justify-center px-5 md:px-8"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -143,7 +159,7 @@ export function InstagramStrip() {
       </div>
 
       {/* Face indicators */}
-      <div className="mt-6 flex items-center justify-center gap-2">
+      <div className="relative z-[2] mt-6 flex items-center justify-center gap-2">
         {faces.map((face, i) => (
           <button
             key={face.label}

@@ -62,6 +62,10 @@ body {
   body.mobile-menu-open [data-mobile-dock] {
     display: none;
   }
+
+  body.mobile-menu-open .jungle-corners {
+    visibility: hidden;
+  }
 }
 
 @keyframes announce-marquee {

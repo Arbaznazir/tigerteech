@@ -4,6 +4,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { DealCountdownBar } from "@/components/layout/DealCountdownBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { JungleCorners } from "@/components/layout/JungleCorners";
 import { MobileBottomDock } from "@/components/layout/MobileBottomDock";
 import { CatalogHydration } from "@/components/providers/CatalogHydration";
 import { OnboardingModals } from "@/components/providers/OnboardingModals";
@@ -63,6 +64,7 @@ export default function RootLayout({
         <StoreHydration />
         <CatalogHydration />
         <OnboardingModals />
+        <JungleCorners />
         <AnnouncementBar />
         <DealCountdownBar />
         <Header />

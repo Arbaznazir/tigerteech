@@ -824,7 +824,7 @@ export function Hero({ apiBanners = [] }: { apiBanners?: ApiBanner[] }) {
       {/* Curve into categories */}
       <motion.div
         style={{ opacity: curveOpacity }}
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] leading-[0]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 leading-[0]"
       >
         <svg
           viewBox="0 0 1440 40"

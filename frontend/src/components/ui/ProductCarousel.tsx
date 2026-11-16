@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Flame } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 import type { Product } from "@/data/products";
@@ -113,7 +114,53 @@ export function ProductCarousel({
   }, [autoScroll, cardStep, pauseAutoplay, products.length]);
 
   return (
-    <section ref={sectionRef} className="container-site py-9 md:py-12">
+    <section
+      ref={sectionRef}
+      className={cn(
+        "relative py-9 md:py-12",
+        (variant === "bestseller" || variant === "arrival") && "overflow-hidden"
+      )}
+    >
+      {variant === "bestseller" ? (
+        <>
+          <Image
+            src="/images/jungle/leopard-edge.webp"
+            alt=""
+            width={894}
+            height={1760}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 top-0 z-[5] hidden h-full w-auto max-w-none select-none md:block"
+          />
+          <Image
+            src="/images/jungle/tiger-edge.webp"
+            alt=""
+            width={1086}
+            height={1448}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 right-0 top-0 z-[5] hidden h-full w-auto max-w-none select-none md:block"
+          />
+        </>
+      ) : variant === "arrival" ? (
+        <>
+          <Image
+            src="/images/jungle/toucan-edge.webp"
+            alt=""
+            width={1024}
+            height={1536}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 top-0 z-[5] hidden h-full w-auto max-w-none -translate-x-[40%] select-none md:block"
+          />
+          <Image
+            src="/images/jungle/leopard-arrival-edge.webp"
+            alt=""
+            width={1024}
+            height={1536}
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 right-0 top-0 z-[5] hidden h-full w-auto max-w-none select-none md:block"
+          />
+        </>
+      ) : null}
+      <div className="container-site relative z-[2]">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4 md:mb-8">
         <div>
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.26em] text-orange">
@@ -156,22 +203,25 @@ export function ProductCarousel({
         </div>
       </div>
 
-      <div
-        ref={scroller}
-        className={cn(
-          // One tile width for every carousel — min 200px so "Add to Cart" never ellipsizes
-          "scrollbar-hide grid grid-flow-col gap-3 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
-          "auto-cols-[minmax(200px,72vw)]",
-          "sm:auto-cols-[minmax(200px,46vw)] sm:gap-4",
-          "md:gap-4 md:auto-cols-[minmax(200px,calc((100%-3rem)/4))]",
-          "lg:auto-cols-[minmax(200px,calc((100%-3rem)/4))]"
-        )}
-      >
+      <div className="relative z-[2]">
+        <div
+          ref={scroller}
+          className={cn(
+            // One tile width for every carousel — min 200px so "Add to Cart" never ellipsizes
+            "scrollbar-hide grid grid-flow-col gap-3 overflow-x-auto scroll-smooth pb-3 snap-x snap-mandatory",
+            "auto-cols-[minmax(200px,72vw)]",
+            "sm:auto-cols-[minmax(200px,46vw)] sm:gap-4",
+            "md:gap-4 md:auto-cols-[minmax(200px,calc((100%-3rem)/4))]",
+            "lg:auto-cols-[minmax(200px,calc((100%-3rem)/4))]"
+          )}
+        >
         {products.map((product) => (
           <div key={product.id} data-card className="h-full snap-start">
             <ProductCard product={product} variant={variant} />
           </div>
         ))}
+        </div>
+      </div>
       </div>
     </section>
   );
